@@ -1,0 +1,52 @@
+@import "antd/dist/reset.css";
+@import "./pages/home.scss";
+@import "./components/index.scss";
+@import "./pages/index.scss";
+@import "react-toastify/dist/ReactToastify.css";
+
+@import "./responsive.scss";
+
+.page-content {
+  width: calc(100% - 74px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  @include small() {
+    width: 100%;
+  }
+
+  @include xs-small() {
+    width: 100%;
+  }
+
+  @include mobileToTablet {
+    width: 100%;
+  }
+}
+
+.page-container {
+}
+
+::-webkit-scrollbar {
+  width: 0.125rem;
+  height: 0.125rem;
+  border-radius: 0.25rem;
+
+  // display: none;
+}
+
+::-webkit-scrollbar-track {
+  background: #e7e7e7;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #a3a2a2;
+  border-radius: 0.25rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #a3a2a2;
+}

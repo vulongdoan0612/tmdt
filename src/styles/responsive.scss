@@ -1,0 +1,178 @@
+$medium: 640px;
+$large: 1024px;
+$xs: 0px;
+$sm: 480px; //480px
+$md: 768px; //768px
+$lg: 992px; //992px
+$xl: 1200px; //1200px
+$xxl: 1400px; //1400px
+$xxxl: 1720px; //1720px
+
+@mixin mobile {
+  @media (max-width: #{$medium}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$medium}) and (max-width: #{$large - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$large}) {
+    @content;
+  }
+}
+
+@mixin x-small {
+  @media (max-width: $xl) {
+    @content;
+  }
+}
+@mixin xs-small {
+  @media (max-width: $sm) {
+    @content;
+  }
+}
+
+@mixin small {
+  @media (min-width: $sm) and (max-width: #{$md - 1px}) {
+    @content;
+  }
+}
+
+@mixin medium {
+  @media (min-width: $md) and (max-width: #{$lg - 1px}) {
+    @content;
+  }
+}
+
+@mixin large {
+  @media (min-width: $lg) and (max-width: #{$xl - 1px}) {
+    @content;
+  }
+}
+
+@mixin large-s {
+  @media (min-width: $lg) and (max-width: #{$xxl - 1px}) {
+    @content;
+  }
+}
+
+@mixin extra-large {
+  @media (min-width: $xl) and (max-width: #{$xxl - 1px}) {
+    @content;
+  }
+}
+
+@mixin x-large {
+  @media (min-width: $xxl) and (max-width: #{$xxxl - 1px}) {
+    @content;
+  }
+}
+
+@mixin xx-large {
+  @media (min-width: $xxl) {
+    @content;
+  }
+}
+
+@mixin tablet-desktop {
+  @media (min-width: #{$xl + 58px}) {
+    @content;
+  }
+}
+@mixin hideHeaderDesktop {
+  @media (max-width: #{$xl + 57px}) {
+    @content;
+  }
+}
+
+@mixin gridMobile {
+  @media (max-width: 28.375rem) {
+    @content;
+  }
+}
+
+@mixin gridMobile-2 {
+  @media (min-width: 35rem) and (max-width: 46.375rem) {
+    @content;
+  }
+}
+@mixin gridTablet {
+  @media (min-width: 46.438rem) and (max-width: 48.875rem) {
+    @content;
+  }
+}
+@mixin gridTablet-2 {
+  @media (min-width: 48.938rem) and ((max-width: 51.875rem)) {
+    @content;
+  }
+}
+@mixin gridTablet-3 {
+  @media (min-width: 51.938rem) and ((max-width: 58.125rem)) {
+    @content;
+  }
+}
+
+@mixin gridTablet-4 {
+  @media (min-width: 62.5rem) and ((max-width: 68.313rem)) {
+    @content;
+  }
+}
+@mixin gridTablet-5 {
+  @media (min-width: 68.375rem) and ((max-width: 75rem)) {
+    @content;
+  }
+}
+@mixin gridTablet-6 {
+  @media (min-width: 75.063rem) and ((max-width: 78.313rem)) {
+    @content;
+  }
+}
+
+// new breakpoints
+$nxs: 374px;
+$nmd: 413px;
+$nlg: 767px;
+$nxl: 1023px;
+$nx2l: 1199px;
+$nx3l: 1439px;
+$n4xl: 1599px;
+$n5xl: 1919px;
+
+$breakpoints: (
+  nxs: 374px,
+  nmd: 413px,
+  nmb: 476px,
+  nlg: 767px,
+  nxl: 1023px,
+  n2xl: 1199px,
+  n3xl: 1439px,
+  n4xl: 1599px,
+  n5xl: 1919px,
+);
+
+@mixin respond-to($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    $bp-value: map-get($breakpoints, $breakpoint);
+    @media (max-width: $bp-value) {
+      @content;
+    }
+  } @else {
+    @error "Invalid breakpoint '#{$breakpoint}'!";
+  }
+}
+// breakpoint responsive sidebar new
+@mixin mobileToTablet {
+  @media (max-width: #{$xl - 1px} ) {
+    @content;
+  }
+}
+@mixin TabletToDesktop {
+  @media (min-width: #{$xl }) {
+    @content;
+  }
+}

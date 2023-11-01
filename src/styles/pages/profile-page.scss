@@ -1,0 +1,123 @@
+.profile-page-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  .ant-tabs {
+    width: 80%;
+    .ant-tabs-content-holder{
+      border-left:none;
+    }
+    .information-profile {
+      .information {
+        display: flex;
+        flex-direction: column;
+        .wrapper-box {
+          padding: 16px 24px;
+          margin-bottom: 40px;
+          gap: 8px;
+          min-height: 96px;
+          background: linear-gradient(
+              0deg,
+              rgba(0, 0, 0, 0.65),
+              rgba(0, 0, 0, 0.65)
+            ),
+            #202020;
+          border-radius: 8px;
+          display: flex;
+          justify-content: space-between;
+          .left-box {
+            .middle-box {
+              .middle-bottom-box {
+                display: flex;
+                gap: 1rem;
+                .line {
+                  width: 1px;
+                  height: 22px;
+                  background-color: white;
+                }
+              }
+            }
+            gap: 1rem;
+            align-items: center;
+            display: flex;
+          }
+          .right-box {
+            cursor: pointer;
+            align-items: center;
+            display: flex;
+          }
+          .ant-image {
+            width: 64px;
+            height: 64px;
+          }
+        }
+      }
+      .account {
+        .wrapper-box-bottom {
+          padding: 16px 24px;
+          margin-bottom: 40px;
+          gap: 8px;
+          min-height: 96px;
+          background: linear-gradient(
+              0deg,
+              rgba(0, 0, 0, 0.65),
+              rgba(0, 0, 0, 0.65)
+            ),
+            #202020;
+          border-radius: 8px;
+          .accountnumber{
+    padding: 27.5px 0;
+    border-bottom: 1px solid #2c2c2e;            display: flex;
+            gap:1rem;
+          }
+          .idnumber{    padding: 27.5px 0;
+    border-bottom: 1px solid #2c2c2e;
+display: flex;
+            gap:1rem;
+          }
+          .email{    padding: 27.5px 0;
+    border-bottom: 1px solid #2c2c2e;
+            display: flex;
+            justify-content: space-between;
+            .email-left{
+              display: flex;
+              gap: 1rem;
+            }
+            .change{
+              cursor: pointer;
+            }
+          }
+          .location{    padding: 27.5px 0;
+    border-bottom: 1px solid #2c2c2e;
+            display: flex;
+            justify-content: space-between;
+            .location-left{
+              display: flex;
+              gap:1rem;
+            }
+            .change{
+              cursor: pointer;
+
+            }
+          }
+          .password{    
+            padding-top: 27.5px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between  ;
+            .password-left{
+              display: flex;
+              gap:1rem;
+              align-items: center;
+            }
+            .change{
+              cursor: pointer;
+
+            }
+          }
+
+        }
+      }
+    }
+  }
+}
