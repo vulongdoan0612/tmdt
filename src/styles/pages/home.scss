@@ -1,0 +1,12 @@
+.home-wrapper{
+    .swiper{
+        cursor: pointer;
+        .swiper-slide{
+            img{
+                border-radius: 5px;
+            }
+        }
+    }
+    width: 80%;
+    margin: auto;
+}
