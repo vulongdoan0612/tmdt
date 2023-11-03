@@ -1,4 +1,4 @@
-import { getProfile, requestForgotPassword, requestLogin, requestRegister } from "@/services/account";
+import { getProfile, requestForgotPassword, requestLogin, requestRegister, requestRegisterFilmMaker } from "@/services/account";
 import { Button, Checkbox, Form, Image, Input, Modal } from "antd";
 import { toast } from "react-toastify";
 
@@ -10,6 +10,7 @@ import useDidMountEffect from "@/utils/customHook";
 import { RootState } from "@/redux/store";
 import { limitText } from "@/utils/limitText";
 import { useRouter } from "next/router";
+import Link from "next/link";
 interface LoginForm{
   email: string;
   password: string;
@@ -28,9 +29,17 @@ useDidMountEffect(() => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [openForgotpassword, setOpenForgotpassword] = useState(false);
+    const [openFilmMaker, setOpenFilmMaker] = useState(false);
+
   const [confirmLoadingForgotpassword, setConfirmLoadingForgotpassword] = useState(false);
   const [openSignup, setOpenSignup] = useState(false);
   const [confirmLoadingSignup, setConfirmLoadingSignup] = useState(false);
+    const [openFilmMakerSignUp, setOpenFilmMakerSignUp] = useState(false);
+
+    const [confirmLoadingFilmMaker, setConfirmLoadingFilmMaker] = useState(false);
+    const [confirmLoadingFilmMakerSignUp, setConfirmLoadingFilmMakerSignUp] =
+      useState(false);
+
   const showModal = () => {
     setOpen(true);
   };
@@ -41,6 +50,17 @@ useDidMountEffect(() => {
     setConfirmLoading(true);
    
   };
+    const handleOkFilmMaker = () => {
+      setConfirmLoadingFilmMaker(true);
+  };
+  const onOkSignupFilmMaker = () => {
+          setConfirmLoadingFilmMaker(true);
+
+  }
+  const handleOkSignupFilmMaker = () => {
+          setConfirmLoadingFilmMakerSignUp(true);
+
+  }
   const handleOkForgotpassword = () => {
     setConfirmLoadingForgotpassword(true);
    
@@ -57,6 +77,13 @@ useDidMountEffect(() => {
     console.log("Clicked cancel button");
     setOpen(false);
   };
+   const handleCancelFilmMaker = () => {
+     console.log("Clicked cancel button");
+     setOpenFilmMaker(false);
+  };
+  const handleCancelSignupFilMaker = () => {
+    setOpenFilmMakerSignUp(false)
+  }
   const onFinishForgotpassword  =()=>{
 
   }
@@ -116,20 +143,6 @@ useDidMountEffect(() => {
         } catch {
         }
         finally {
-          // const response = await getProfile(
-          //   String(token),
-          //   String(refresh_token)
-          // );
-          // console.log(response);
-          // if (response?.user) {
-          //   dispatch(
-          //     setAuthenticate({
-          //       isAuthenticated: true,
-          //       account: response?.user,
-          //       loading: false,
-          //     })
-          //   );
-          // }
         }
       } else if (response.status === 401) {
         toast.error("Sai mật khẩu hoặc tài khoản không tồn tại");
@@ -166,12 +179,41 @@ useDidMountEffect(() => {
       toast.error("Email đã tồn tại");
     }
   };
+   const onFinishSignupFilmMaker = async (values: any) => {
+     try {
+       const dataLogin = {
+         username: values.username,
+         email: values.email,
+         password: values.password,
+         birthday: values.birthday,
+         companyName: values.companyName,
+         location: values.location,
+       };
+       console.log('testtt')
+       const response = await requestRegisterFilmMaker(dataLogin);
+       if (
+         response.status === 201 &&
+         response?.data?.message === "Film maker registered successfully."
+       ) {
+         setOpenSignup(false);
+         toast.success(response.data.message);
+       } else if (response.status === 400) {
+         toast.error("Email đã tồn tại.");
+       }
+     } catch (error: any) {
+       toast.error("Email đã tồn tại");
+     }
+   };
   const onFinishFailed = (errorInfo:any) => {
     console.log('Failed:', errorInfo);
   };
   const handleSignUp =()=>{
     setOpen(false)
     setOpenSignup(true)
+  }
+  const handleSignUpFilmMaker = () => {
+    setOpenFilmMaker(false)
+    setOpenFilmMakerSignUp(true)
   }
   const onFinishGetCode = async (values: any) => {
     console.log(values)
@@ -189,10 +231,20 @@ useDidMountEffect(() => {
       console.log("Sai mật khẩu hoặc tài khoản không tồn tại", error);
     }
   };
+  const openFilmMakerModal = () => {
+    setOpen(false)
+    setOpenFilmMaker(true)
+  }
+  const openUser = () => {
+    setOpenFilmMaker(false)
+    setOpen(true)
+  }
   return (
     <div className="header-wrapper">
       <div className="header-left">
-        <a href="/"><Image src="/icons/logo.png" preview={false} alt=""></Image></a>
+        <Link href="/">
+          <Image src="/icons/logo.png" preview={false} alt=""></Image>
+        </Link>
         <div className="list-menu">
           <span>Trang chủ</span>
           <span>Truyền hình</span>
@@ -211,7 +263,9 @@ useDidMountEffect(() => {
           <span>Mua giói</span>
         </button>
         {account?.username ? (
-          <span className="username" onClick={handleProfile}>{limitText(account.username)}</span>
+          <span className="username" onClick={handleProfile}>
+            {limitText(account.username)}
+          </span>
         ) : (
           <span className="login" onClick={showModal}>
             Đăng nhập
@@ -272,13 +326,19 @@ useDidMountEffect(() => {
 
           <Form.Item
             name="remember"
-            valuePropName="checked"
             wrapperCol={{
               offset: 8,
               span: 16,
             }}
           >
-            <span onClick={forgotPass}>Quên mật khẩu</span>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span onClick={forgotPass} style={{ cursor: "pointer" }}>
+                Quên mật khẩu
+              </span>
+              <span style={{ cursor: "pointer" }} onClick={openFilmMakerModal}>
+                Bạn là nhà sản xuất phim ?
+              </span>
+            </div>
           </Form.Item>
 
           <Form.Item
@@ -316,7 +376,7 @@ useDidMountEffect(() => {
           style={{
             maxWidth: 600,
           }}
-          onFinish={onFinishSignup}
+          onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
@@ -432,6 +492,212 @@ useDidMountEffect(() => {
           >
             <Button type="primary" htmlType="submit">
               Đặt lại tài khoản
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        className="modal-signin"
+        title="Đăng nhập nhà làm phim"
+        open={openFilmMaker}
+        footer={null}
+        onOk={handleOkFilmMaker}
+        confirmLoading={confirmLoadingFilmMaker}
+        onCancel={handleCancelFilmMaker}
+      >
+        <Form
+          name="basic"
+          labelCol={{
+            span: 8,
+          }}
+          wrapperCol={{
+            span: 16,
+          }}
+          style={{
+            maxWidth: 600,
+          }}
+          // initialValues={{
+          //   remember: true,
+          // }}
+
+          onFinish={onFinishForgotpassword}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+        >
+          <Form
+            name="basic"
+            labelCol={{
+              span: 8,
+            }}
+            wrapperCol={{
+              span: 16,
+            }}
+            style={{
+              maxWidth: 600,
+            }}
+            // initialValues={{
+            //   remember: true,
+            // }}
+
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
+            <Form.Item
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your Email!",
+                },
+              ]}
+            >
+              <Input placeholder="Email" />
+            </Form.Item>
+
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your password!",
+                },
+              ]}
+            >
+              <Input.Password placeholder="Mật khẩu" />
+            </Form.Item>
+
+            <Form.Item
+              name="remember"
+              wrapperCol={{
+                offset: 8,
+                span: 16,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span onClick={forgotPass} style={{ cursor: "pointer" }}>
+                  Quên mật khẩu
+                </span>
+                <span style={{ cursor: "pointer" }} onClick={openUser}>
+                  Bạn là người xem ?
+                </span>
+              </div>
+            </Form.Item>
+
+            <Form.Item
+              wrapperCol={{
+                offset: 8,
+                span: 16,
+              }}
+            >
+              <Button type="primary" htmlType="submit">
+                Đăng nhập
+              </Button>
+            </Form.Item>
+          </Form>
+          <span className="signup" onClick={handleSignUpFilmMaker}>
+            Chưa có tài khoản nhà làm phim? Đăng ký miễn phí
+          </span>
+        </Form>
+      </Modal>
+      <Modal
+        className="modal-signin"
+        title="Đăng ký trở thành nhà làm phim"
+        open={openFilmMakerSignUp}
+        footer={null}
+        onOk={handleOkSignupFilmMaker}
+        confirmLoading={confirmLoadingFilmMakerSignUp}
+        onCancel={handleCancelSignupFilMaker}
+      >
+        <Form
+          name="basic"
+          labelCol={{
+            span: 8,
+          }}
+          wrapperCol={{
+            span: 16,
+          }}
+          style={{
+            maxWidth: 600,
+          }}
+          onFinish={onFinishSignupFilmMaker}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+        >
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Email!",
+              },
+            ]}
+          >
+            <Input placeholder="Email" />
+          </Form.Item>
+          <Form.Item
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: "Please input your username!",
+              },
+            ]}
+          >
+            <Input placeholder="Username" />
+          </Form.Item>
+          <Form.Item
+            name="birthday"
+            rules={[
+              {
+                required: true,
+                message: "Please input your username!",
+              },
+            ]}
+          >
+            <Input placeholder="birthday" />
+          </Form.Item>{" "}
+          <Form.Item
+            name="companyName"
+            rules={[
+              {
+                required: true,
+                message: "Please input your companyName!",
+              },
+            ]}
+          >
+            <Input placeholder="companyName" />
+          </Form.Item>{" "}
+          <Form.Item
+            name="location"
+            rules={[
+              {
+                required: true,
+                message: "Please input your location!",
+              },
+            ]}
+          >
+            <Input placeholder="Location" />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+            ]}
+          >
+            <Input.Password placeholder="Mật khẩu" />
+          </Form.Item>
+          <Form.Item
+            wrapperCol={{
+              offset: 8,
+              span: 16,
+            }}
+          >
+            <Button type="primary" htmlType="submit">
+              Đăng ký trở thành nhà làm phim
             </Button>
           </Form.Item>
         </Form>

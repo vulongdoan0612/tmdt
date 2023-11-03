@@ -1,4 +1,5 @@
 import { IForgotPassword, ILogin, IRegister, IResetPassword } from "@/interfaces/request/account";
+import { setAuthenticate } from "@/redux/reducers/auth";
 import { axios } from "@/utils/axios";
 
 export const requestLogin = async (data: ILogin) => {
@@ -18,6 +19,15 @@ export const requestRegister = async (data: IRegister) => {
       data: data,
     };
   
+    return axios(config);
+};
+  export const requestRegisterFilmMaker = async (data: IRegister) => {
+    const config = {
+      method: "POST",
+      url: `/register-filmMaker`,
+      data: data,
+    };
+
     return axios(config);
   };
   export const requestForgotPassword = async (data: IForgotPassword) => {
@@ -112,4 +122,15 @@ export const changeProfile = async (data: any, accessToken: string | null) => {
   };
 
   return axios(config);
+};
+export const logout = (dispatch: any) => {
+  // Xóa AccessToken và RefreshToken từ Local Storage
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("role");
+
+  // Gửi dispatch để cập nhật trạng thái đăng nhập
+  dispatch(
+    setAuthenticate({ isAuthenticated: false, account: {}, loading: false })
+  );
 };
