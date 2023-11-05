@@ -7,6 +7,26 @@
             }
         }
     }
+    .title{
+        margin-top: 7rem;
+        color:white;
+    }
+    
+    .mySwiper-movie{
+        // img{
+        //     width: 280px;
+        //     height: 200px;
+        // }
+        .ant-image{
+            height: 200px;
+            width: 270px;
+
+            img{
+                width: 270px;
+                height: 200px;
+            }
+        }
+    }
     width: 80%;
     margin: auto;
 }

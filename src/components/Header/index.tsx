@@ -1,4 +1,4 @@
-import { getProfile, requestForgotPassword, requestLogin, requestRegister, requestRegisterFilmMaker } from "@/services/account";
+import { getProfile, getProfileFilmMaker, requestForgotPassword, requestLogin, requestLoginFilmMaker, requestRegister, requestRegisterFilmMaker } from "@/services/account";
 import { Button, Checkbox, Form, Image, Input, Modal } from "antd";
 import { toast } from "react-toastify";
 
@@ -108,7 +108,6 @@ useDidMountEffect(() => {
            String(token),
            String(refresh_token)
          );
-         console.log(response);
          if (response?.user) {
            dispatch(
              setAuthenticate({
@@ -122,6 +121,28 @@ useDidMountEffect(() => {
      } catch {
        console.log("error");
      }
+   }
+   else if(role==="filmMaker" && token){
+    try {
+      if (token && refresh_token) {
+        dispatch(setAuthenticate({ loading: true }));
+        const response = await getProfileFilmMaker(
+          String(token),
+          String(refresh_token)
+        );
+        if (response?.user) {
+          dispatch(
+            setAuthenticate({
+              isAuthenticated: true,
+              account: response?.user,
+              loading: false,
+            })
+          );
+        }
+      }
+    } catch {
+      console.log("error");
+    }
    }
  };
   const onFinish = async (values: LoginForm) => {
@@ -157,6 +178,38 @@ useDidMountEffect(() => {
       }, 500);
     }
   };
+  const onFinishSignInFilMaker = async (values: LoginForm) => {
+  setConfirmLoading(true);
+  try {
+    const dataLogin = {
+      email: values?.email,
+      password: values?.password,
+    };
+    const response = await requestLoginFilmMaker(dataLogin);
+    console.log(response);
+    if (response.status === 200 && response?.data?.token) {
+      try {
+        localStorage.setItem("access_token", response?.data?.token);
+        localStorage.setItem("refresh_token", response?.data?.refreshToken);
+        localStorage.setItem("role", response?.data?.role);
+      } catch {
+      }
+      finally {
+      }
+    } else if (response.status === 401) {
+      toast.error("Sai mật khẩu hoặc tài khoản không tồn tại");
+    }
+  } catch (error: any) {
+    toast.error("Sai mật khẩu hoặc tài khoản không tồn tại", error);
+  }
+  finally{
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmLoading(false);
+    }, 500);
+  }
+  setOpenFilmMaker(false)
+};
   const onFinishSignup = async (values: any) => {
     try {
       const dataLogin = {
@@ -189,7 +242,6 @@ useDidMountEffect(() => {
          companyName: values.companyName,
          location: values.location,
        };
-       console.log('testtt')
        const response = await requestRegisterFilmMaker(dataLogin);
        if (
          response.status === 201 &&
@@ -203,6 +255,9 @@ useDidMountEffect(() => {
      } catch (error: any) {
        toast.error("Email đã tồn tại");
      }
+     setOpenFilmMakerSignUp(false)
+     setOpenFilmMaker(true)
+
    };
   const onFinishFailed = (errorInfo:any) => {
     console.log('Failed:', errorInfo);
@@ -376,7 +431,7 @@ useDidMountEffect(() => {
           style={{
             maxWidth: 600,
           }}
-          onFinish={onFinish}
+          onFinish={onFinishSignup}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
@@ -520,29 +575,11 @@ useDidMountEffect(() => {
           //   remember: true,
           // }}
 
-          onFinish={onFinishForgotpassword}
+          onFinish={onFinishSignInFilMaker}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
-          <Form
-            name="basic"
-            labelCol={{
-              span: 8,
-            }}
-            wrapperCol={{
-              span: 16,
-            }}
-            style={{
-              maxWidth: 600,
-            }}
-            // initialValues={{
-            //   remember: true,
-            // }}
 
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            autoComplete="off"
-          >
             <Form.Item
               name="email"
               rules={[
@@ -594,7 +631,6 @@ useDidMountEffect(() => {
                 Đăng nhập
               </Button>
             </Form.Item>
-          </Form>
           <span className="signup" onClick={handleSignUpFilmMaker}>
             Chưa có tài khoản nhà làm phim? Đăng ký miễn phí
           </span>

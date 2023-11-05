@@ -12,6 +12,16 @@ export const requestLogin = async (data: ILogin) => {
 
   return axios(config);
 };
+export const requestLoginFilmMaker = async (data: ILogin) => {
+  console.log(data)
+const config = {
+  method: "POST",
+  url: `/login-filmMaker`,
+  data: data,
+};
+
+return axios(config);
+};
 export const requestRegister = async (data: IRegister) => {
     const config = {
       method: "POST",
@@ -79,6 +89,35 @@ export const requestRegister = async (data: IRegister) => {
       }
     }
   };
+  export const getProfileFilmMaker = async (
+    accessToken: string,
+    refresh_token: string
+  ) => {
+    console.log(accessToken)
+    const config = {
+      method: "GET",
+      url: `profile-filmMaker`,
+      headers: {
+        Authorization: accessToken,
+      },
+    };
+
+    try {
+      const response = await axios(config);
+      return response.data; // Trả về dữ liệu từ API
+    } catch (error: any) {
+      if (error.response && error.response.status === 403) {
+        try {
+          console.log("Token đã hết hạn ");
+          await requestNewAccessToken(String(refresh_token));
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        throw error; // Ném lỗi nếu có lỗi khác xảy ra
+      }
+    }
+  };
 export const requestNewAccessToken = async (refreshToken: string) => {
   try {
     const config = {
@@ -123,6 +162,36 @@ export const changeProfile = async (data: any, accessToken: string | null) => {
 
   return axios(config);
 };
+export const uploadMovie = async (movie: any, thumbnail:any,accessToken: string | null,info:any) => {
+  const formData = new FormData();
+  if (movie.movies) {
+    formData.append('movies', movie?.movies[0]?.originFileObj);
+  }
+  console.log(thumbnail,movie)
+  if (thumbnail.thumbnails) {
+    formData.append('thumbnails', thumbnail?.thumbnails[0]?.originFileObj);
+  }
+  if(info){
+    formData.append('author', info.author);
+    formData.append('movieName', info.movieName);
+    formData.append('dateRelease', info.dateRelease);
+    formData.append('actor', info.actor);
+
+  }
+  console.log(formData)
+  const config = {
+    method: "POST",
+    url: `/upload-video`,
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+
+      'Authorization': accessToken
+    },
+  };
+
+  return axios(config);
+};
 export const logout = (dispatch: any) => {
   // Xóa AccessToken và RefreshToken từ Local Storage
   localStorage.removeItem("access_token");
@@ -133,4 +202,15 @@ export const logout = (dispatch: any) => {
   dispatch(
     setAuthenticate({ isAuthenticated: false, account: {}, loading: false })
   );
+};
+export const getAllFilm = async (accessToken: string) => {
+  const config = {
+    method: "GET",
+    url: `/all-movies`,
+    headers: {
+      'Authorization': accessToken
+    },
+  };
+
+  return axios(config);
 };
