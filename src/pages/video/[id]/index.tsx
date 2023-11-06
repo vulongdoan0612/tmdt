@@ -25,7 +25,7 @@ const Video = () => {
 
   return (
     <Page title={PAGE_TITLE.PROFILE} loadingData={false}>
-      <div>
+      <div className="video-page">
         <Player
           playsInline
           poster={film?.data?.thumbnails}

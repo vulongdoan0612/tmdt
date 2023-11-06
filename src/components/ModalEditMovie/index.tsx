@@ -5,113 +5,137 @@ import { useEffect, useRef, useState } from "react";
 import { setAuthenticate } from "@/redux/reducers/auth";
 import { RootState } from "@/redux/store";
 import { UploadOutlined } from "@ant-design/icons";
-import { uploadMovie } from "@/services/account";
+import { editMovie, uploadMovie } from "@/services/account";
+import { getAllFilmMaker } from "@/services/movie";
 const { TextArea } = Input;
 
-const ModalAddMovie = ({ isEdit, open, handleCancel }: any) => {
-  const [form] = Form.useForm<{ plan: string }>();
+const ModalEditMovie = ({
+  isEdit,
+  open,
+  handleCancel,
+  selectedItem,
+  setFilmMaker,
+}: any) => {
+  console.log(selectedItem);
+  const [form] = Form.useForm<any>();
   const dispatch = useDispatch();
   const { account } = useSelector((state: RootState) => state.auth);
   const [fileList, setFileList] = useState<any[]>([]);
   const [fileListThumbnail, setFileListThumbnail] = useState<any[]>([]);
+  useEffect(() => {
+    form.setFieldsValue({
+      author: selectedItem?.author,
+      movieName: selectedItem?.movieName,
+      actor: selectedItem?.actor,
+      dateRelease: selectedItem?.dateRelease,
+    });
+  }, [
+    form,
+    selectedItem?.author,
+    selectedItem?.movieName,
+    selectedItem?.actor,
+    selectedItem?.dateRelease,
+  ]);
+const getData = async () => {
+  const token = localStorage.getItem("access_token");
 
+  const data = await getAllFilmMaker(String(token));
+  setFilmMaker(data);
+};
   const onFinish = async (values: any) => {
     try {
-        const token = localStorage.getItem("access_token");
-
+      const token = localStorage.getItem("access_token");
+      console.log(values, fileList);
       if (fileList.length > 0) {
         const info = {
-            author: values.author,
-            movieName: values.movieName,
-            actor: values.actor,
-            dateRelease: values.dateRelease,
-
-            // Thay đổi thuộc tính "plan"
-          };
-        const response = await uploadMovie({ movies: fileList},{thumbnails: fileListThumbnail}, token,info);
-    console.log(response)
+          author: values.author,
+          movieName: values.movieName,
+          actor: values.actor,
+          dateRelease: values.dateRelease,
+          // Thay đổi thuộc tính "plan"
+        };
+        const response = await editMovie(
+          { movies: fileList },
+          { thumbnails: fileListThumbnail },
+          token,
+          info,
+          selectedItem._id
+        );
+        console.log(response);
       }
-  
     } catch (error) {
       console.log(error);
-    }
-    handleCancel()
+      }
+      
+      getData()
+    handleCancel();
   };
   const onChange = ({ fileList }: any) => {
     setFileList(fileList);
   };
   const onChangeThumbnail = ({ fileList }: any) => {
-    console.log(fileList)
+    console.log(fileList);
     setFileListThumbnail(fileList);
   };
   return (
     <CustomModal
-      title={"Tạo phim"}
+      title={"Sửa Phim"}
       open={open}
       onCancel={handleCancel}
       className="modal-banner"
-    //   width={"50vw"}
+      //   width={"50vw"}
     >
       <Form
         form={form}
         layout="vertical"
         onFinish={onFinish}
         autoComplete="off"
-        
       >
         <Form.Item
           name="author"
           label="Đạo diễn"
           rules={[{ required: true, message: "Đạo diễn is required" }]}
         >
-          <Input
-            placeholder="Đạo diễn"
-          />
+          <Input placeholder="Đạo diễn" />
         </Form.Item>
         <Form.Item
           name="movieName"
           label="Tên Phim"
           rules={[{ required: true, message: "Tên Phim is required" }]}
         >
-          <Input
-            placeholder="Tên Phim"
-          />
+          <Input placeholder="Tên Phim" />
         </Form.Item>
         <Form.Item
           name="actor"
           label="Diễn viên"
           rules={[{ required: true, message: "Diễn viên is required" }]}
         >
-          <Input
-            placeholder="Diễn viên"
-          />
+          <Input placeholder="Diễn viên" />
         </Form.Item>
         <Form.Item
           name="dateRelease"
           label="Ngày sản xuất"
           rules={[{ required: true, message: "Ngày sản xuất is required" }]}
         >
-          <Input
-            placeholder="Ngày sản xuất"
-          />
+          <Input placeholder="Ngày sản xuất" />
         </Form.Item>
         <Upload
-              onChange={onChange}
-              fileList={fileList}
-              listType="picture-card"
-              maxCount={1}
-              name="movies"
-            >
-              <Button icon={<UploadOutlined />}></Button>
-            </Upload>
-            <Upload
-              onChange={onChangeThumbnail}
-              fileList={fileListThumbnail}
-              maxCount={1}
-              name="thumbnails"
-            >
-              <Button icon={<UploadOutlined />}></Button>
-            </Upload>
+          onChange={onChange}
+          fileList={fileList}
+          listType="picture-card"
+          maxCount={1}
+          name="movies"
+        >
+          <Button icon={<UploadOutlined />}></Button>
+        </Upload>
+        <Upload
+          onChange={onChangeThumbnail}
+          fileList={fileListThumbnail}
+          maxCount={1}
+          name="thumbnails"
+        >
+          <Button icon={<UploadOutlined />}></Button>
+        </Upload>
         <div
           className="column-buttons flex justify-end"
           style={{ marginTop: "24px" }}
@@ -124,4 +148,4 @@ const ModalAddMovie = ({ isEdit, open, handleCancel }: any) => {
     </CustomModal>
   );
 };
-export default ModalAddMovie;
+export default ModalEditMovie;

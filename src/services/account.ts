@@ -178,7 +178,7 @@ export const uploadMovie = async (movie: any, thumbnail:any,accessToken: string 
     formData.append('actor', info.actor);
 
   }
-  console.log(formData)
+
   const config = {
     method: "POST",
     url: `/upload-video`,
@@ -187,6 +187,42 @@ export const uploadMovie = async (movie: any, thumbnail:any,accessToken: string 
       'Content-Type': 'multipart/form-data',
 
       'Authorization': accessToken
+    },
+  };
+
+  return axios(config);
+};
+export const editMovie = async (
+  movie: any,
+  thumbnail: any,
+  accessToken: string | null,
+  info: any,
+  id:string
+) => {
+  const formData = new FormData();
+  if (movie.movies) {
+    formData.append("movies", movie?.movies[0]?.originFileObj);
+  }
+  if (thumbnail.thumbnails) {
+    formData.append("thumbnails", thumbnail?.thumbnails[0]?.originFileObj);
+  }
+  if (info) {
+    formData.append("author", info.author);
+    formData.append("movieName", info.movieName);
+    formData.append("dateRelease", info.dateRelease);
+    formData.append("actor", info.actor);
+        formData.append("id", id);
+
+  }
+
+  const config = {
+    method: "PUT",
+    url: `/update-video`,
+    data: formData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+
+      Authorization: accessToken,
     },
   };
 
@@ -209,6 +245,19 @@ export const getAllFilm = async (accessToken: string) => {
     url: `/all-movies`,
     headers: {
       'Authorization': accessToken
+    },
+  };
+
+  return axios(config);
+};
+export const deleteVideoAdmin = async (accessToken: string,id:any) => {
+  const config = {
+    method: "DELETE",
+    data: id,
+
+    url: `/delete-movie-foradmin`,
+    headers: {
+      Authorization: accessToken,
     },
   };
 

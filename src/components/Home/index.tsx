@@ -91,11 +91,11 @@ const Home = () => {
         className="mySwiper-movie"
       >
         <div>
-          {films?.data?.map((item: any) => {
+          {films?.data?.map((item: any,index:any) => {
             return (
-              <SwiperSlide>
+              <SwiperSlide key={index}>
                 <div onClick={() => handleRouter(item._id)}>
-                  <Image src={item?.thumbnails} preview={false}></Image>
+                  <Image src={item?.thumbnails} preview={false} alt=""></Image>
                   <h1 style={{ color: "white" }}>{item?.movieName}</h1>
                 </div>
               </SwiperSlide>

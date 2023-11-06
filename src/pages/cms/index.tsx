@@ -1,4 +1,5 @@
 import ModalAddMovie from "@/components/ModalAddMovie";
+import ModalEditMovie from "@/components/ModalEditMovie";
 import { PAGE_TITLE } from "@/constants";
 import Page from "@/layout/Page";
 import { RootState } from "@/redux/store";
@@ -28,12 +29,13 @@ const CMS = () => {
   const { Header, Sider, Content } = Layout;
   const [isModalVisiblePlan, setIsModalVisiblePlan] = useState<boolean>(false);
   const [selectedItemPlan, setSelectedItemPlan] = useState([]);
+  const [isModalVisibleEdit, setIsModalVisibleEdit] = useState<boolean>(false);
+  const [selectedItemEdit, setSelectedItemEdit] = useState([]);
 
   const router = useRouter();
   const { account, isAuthenticated, loading } = useSelector(
     (state: RootState) => state.auth
   );
-  console.log(account);
   useEffect(() => {
     if (account?.isMaker === false) {
       router.push("/");
@@ -51,6 +53,9 @@ const CMS = () => {
   const handleCloseModalAddMovie = () => {
     setIsModalVisiblePlan(false);
   };
+   const handleCloseModalEditMovie = () => {
+     setIsModalVisibleEdit(false);
+   };
   const [filmMaker,setFilmMaker]=useState<any>([])
   const getData=async()=>{
     const token = localStorage.getItem("access_token");
@@ -78,7 +83,18 @@ const CMS = () => {
 
       const data = await deleteFilmMaker(token,{id:item._id})
       getData()
-    console.log(data)
+  }
+  const handleEditMovie = (item:any) => {
+  try {
+    setSelectedItemEdit(item);
+  } catch {
+    console.log({
+      message: "An error has occurred. Please try again later.",
+      description: "Error",
+    });
+  } finally {
+    setIsModalVisibleEdit(true);
+  }
   }
   const columnsListJob: TableProps<any>["columns"] = [
     {
@@ -109,14 +125,12 @@ const CMS = () => {
       dataIndex: "thumbnails",
       key: "thumbnails",
       ellipsis: true,
-
     },
     {
       title: "Link video phim",
       dataIndex: "movies",
       key: "movies",
       ellipsis: true,
-
     },
 
     {
@@ -128,14 +142,14 @@ const CMS = () => {
           menu={{
             items: [
               {
-                label: <p>Edit</p>,
+                label: <p onClick={() => handleEditMovie(record)}>Edit</p>,
                 key: "0",
               },
               {
                 type: "divider",
               },
               {
-                label: <p onClick={()=>handleDelete(record)}>Delete</p>,
+                label: <p onClick={() => handleDelete(record)}>Delete</p>,
                 key: "1",
               },
             ],
@@ -209,11 +223,11 @@ const CMS = () => {
                   dataSource={filmMaker?.data}
                   columns={columnsListJob}
                 />
-                  <Pagination
-                              current={current}
-                              onChange={onChangePage}
-                              total={filmMaker?.data?.length}
-                            ></Pagination>
+                <Pagination
+                  current={current}
+                  onChange={onChangePage}
+                  total={filmMaker?.data?.length}
+                ></Pagination>
               </div>
             )}
             {selectedMenu === "2" && "Content 2"}
@@ -224,8 +238,14 @@ const CMS = () => {
       <ModalAddMovie
         open={isModalVisiblePlan}
         handleCancel={handleCloseModalAddMovie}
-        selectedItem={selectedItemPlan}
       ></ModalAddMovie>
+      <ModalEditMovie
+        setFilmMaker={setFilmMaker}
+        // getData={getData()}
+        open={isModalVisibleEdit}
+        handleCancel={handleCloseModalEditMovie}
+        selectedItem={selectedItemEdit}
+      ></ModalEditMovie>
     </Page>
   );
 };
