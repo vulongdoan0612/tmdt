@@ -294,6 +294,9 @@ useDidMountEffect(() => {
     setOpenFilmMaker(false)
     setOpen(true)
   }
+  const handleRouter = () => {
+    router.push('/voucher')
+  }
   return (
     <div className="header-wrapper">
       <div className="header-left">
@@ -315,7 +318,7 @@ useDidMountEffect(() => {
         <button>
           {" "}
           <Image src="/icons/Wallet.png" preview={false} alt=""></Image>
-          <span>Mua giói</span>
+          <span onClick={handleRouter}>Mua gói</span>
         </button>
         {account?.username ? (
           <span className="username" onClick={handleProfile}>

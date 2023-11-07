@@ -87,6 +87,9 @@ const Profile = () => {
                       <div className="accountnumber">
                         <span>Tài khoản</span> <span>02939329</span>
                       </div>
+                      <div className="accountnumber">
+                        <span>Rank</span> <span>{account?.voucher ? account?.voucher : ''}</span>
+                      </div>
                       <div className="idnumber">
                         <span>ID</span> <span>{account?._id}</span>
                       </div>

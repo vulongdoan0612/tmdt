@@ -4,7 +4,7 @@ import { Button, Form, Input, Upload } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { setAuthenticate } from "@/redux/reducers/auth";
 import { RootState } from "@/redux/store";
-import { UploadOutlined } from "@ant-design/icons";
+import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
 import { editMovie, getAllFilm, uploadMovie } from "@/services/account";
 import { getAllFilmMaker } from "@/services/movie";
 import { editMovieAdmin } from "@/services/admin";
@@ -17,6 +17,8 @@ const ModalEditMovieAdmin = ({
   selectedItem,
   setFilmMaker,
 }: any) => {
+  const { Dragger } = Upload;
+
   console.log(selectedItem);
   const [form] = Form.useForm<any>();
   const dispatch = useDispatch();
@@ -41,12 +43,12 @@ const ModalEditMovieAdmin = ({
     selectedItem?.thumbnails,
     selectedItem?.movies,
   ]);
-const getData = async () => {
-  const token = localStorage.getItem("access_token");
+  const getData = async () => {
+    const token = localStorage.getItem("access_token");
 
-  const data = await getAllFilm(String(token));
-  setFilmMaker(data);
-};
+    const data = await getAllFilm(String(token));
+    setFilmMaker(data);
+  };
   const onFinish = async (values: any) => {
     try {
       const token = localStorage.getItem("access_token");
@@ -70,9 +72,9 @@ const getData = async () => {
       }
     } catch (error) {
       console.log(error);
-      }
-      
-      getData()
+    }
+
+    getData();
     handleCancel();
   };
   const onChange = ({ fileList }: any) => {
@@ -124,7 +126,25 @@ const getData = async () => {
         >
           <Input placeholder="Ngày sản xuất" />
         </Form.Item>
-        <Upload
+        <Dragger
+          onChange={onChange}
+          fileList={fileList}
+          listType="picture-card"
+          maxCount={1}
+          name="movies"
+        >
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+          <p className="ant-upload-hint">
+            Support for a single or bulk upload. Strictly prohibited from
+            uploading company data or other banned files.
+          </p>
+        </Dragger>
+        {/* <Upload
           onChange={onChange}
           fileList={fileList}
           listType="picture-card"
@@ -132,15 +152,36 @@ const getData = async () => {
           name="movies"
         >
           <Button icon={<UploadOutlined />}></Button>
-        </Upload>
-        <Upload
+        </Upload> */}
+        <Dragger
           onChange={onChangeThumbnail}
           fileList={fileListThumbnail}
           maxCount={1}
           name="thumbnails"
         >
-          <Button icon={<UploadOutlined />}></Button>
-        </Upload>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+          <p className="ant-upload-hint">
+            Support for a single or bulk upload. Strictly prohibited from
+            uploading company data or other banned files.
+          </p>
+        </Dragger>
+        {/* <Form.Item
+          rules={[{ required: true, message: "Ngày sản xuất is required" }]}
+        >
+          <Upload
+            onChange={onChangeThumbnail}
+            fileList={fileListThumbnail}
+            maxCount={1}
+            name="thumbnails"
+          >
+            <Button icon={<UploadOutlined />}></Button>
+          </Upload>
+        </Form.Item> */}
         <div
           className="column-buttons flex justify-end"
           style={{ marginTop: "24px" }}

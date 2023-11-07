@@ -59,9 +59,11 @@ const CMS = () => {
   const [filmMaker,setFilmMaker]=useState<any>([])
   const getData=async()=>{
     const token = localStorage.getItem("access_token");
-
-    const data =await getAllFilmMaker(String(token))
-    setFilmMaker(data)
+    if (account?.isMaker) {
+      
+      const data =await getAllFilmMaker(String(token))
+      setFilmMaker(data)
+    }
   }
   useEffect(()=>{
     getData()

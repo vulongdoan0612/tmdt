@@ -1,14 +1,37 @@
 import Header from "@/components/Header";
+import ModalAddVoucher from "@/components/ModalAddVoucher";
 import ModalEditMovie from "@/components/ModalEditMovie";
 import ModalEditMovieAdmin from "@/components/ModalEditMovieAdmin";
 import { PAGE_TITLE } from "@/constants";
 import Page from "@/layout/Page";
 import { RootState } from "@/redux/store";
-import { deleteVideoAdmin, getAllFilm } from "@/services/account";
+import {
+  deleteVideoAdmin,
+  getAllFilm,
+  getAllVoucher,
+} from "@/services/account";
 import { getAcc, loginAdmin } from "@/services/admin";
 
-import { MenuFoldOutlined, MenuUnfoldOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from "@ant-design/icons";
-import { Button, Dropdown, Form, Input, Layout, Menu, Pagination, Space, Table, TableProps, theme } from "antd";
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Dropdown,
+  Form,
+  Input,
+  Layout,
+  Menu,
+  Pagination,
+  Space,
+  Table,
+  TableProps,
+  theme,
+} from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content } from "antd/es/layout/layout";
 import { useRouter } from "next/router";
@@ -17,59 +40,72 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 const Admin = () => {
-      const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("1");
-    const [selectedItemEdit, setSelectedItemEdit] = useState([]);
-      const [filmMaker, setFilmMaker] = useState<any>([]);
-      const [acc, setAcc] = useState<any>([]);
+  const [selectedItemEdit, setSelectedItemEdit] = useState([]);
+  const [filmMaker, setFilmMaker] = useState<any>([]);
+  const [acc, setAcc] = useState<any>([]);
+  const [listVoucher, setListVoucher] = useState<any>([]);
+
+  const [isModalVisibleVoucher, setIsModalVisibleVoucher] =
+    useState<boolean>(false);
 
   const [isModalVisibleEdit, setIsModalVisibleEdit] = useState<boolean>(false);
-    const [current, setCurrent] = useState(1);    const [currentAcc, setCurrentAcc] = useState(1);
+  const [current, setCurrent] = useState(1);
+  const [currentAcc, setCurrentAcc] = useState(1);
 
-      const { Header, Sider, Content } = Layout;
- const getData = async () => {
-   const token = localStorage.getItem("access_token_admin");
+  const { Header, Sider, Content } = Layout;
+  const getData = async () => {
+    const token = localStorage.getItem("access_token_admin");
 
-   const data = await getAllFilm(String(token));
-   setFilmMaker(data);
-    };
-     const getDataAcc = async () => {
-       const token = localStorage.getItem("access_token_admin");
+    const data = await getAllFilm(String(token));
+    setFilmMaker(data);
+  };
+  const getDataAcc = async () => {
+    const token = localStorage.getItem("access_token_admin");
 
-       const data = await getAcc();
-       setAcc(data);
-     };
-    useEffect(() => {
-     getDataAcc()
-   getData();
- }, []);
-       const handleCloseModalEditMovie = () => {
-         setIsModalVisibleEdit(false);
-       };
+    const data = await getAcc();
+    setAcc(data);
+  };
+  const getListVoucher = async () => {
+    const data = await getAllVoucher();
+    setListVoucher(data);
+  };
+  useEffect(() => {
+    getDataAcc();
+    getListVoucher();
+    getData();
+  }, []);
+  const handleCloseModalEditMovie = () => {
+    setIsModalVisibleEdit(false);
+  };
+  const handleCloseModalVoucher = () => {
+    setIsModalVisibleVoucher(false);
+  };
   const onChangePage = (page: number) => {
     setCurrent(page);
-    };
-     const onChangePageAcc = (page: number) => {
-       setCurrentAcc(page);
-     };
-    type FieldType = {
-      username?: string;
-      password?: string;
-      remember?: string;
-    };
-      const router = useRouter();
+  };
+  const onChangePageAcc = (page: number) => {
+    setCurrentAcc(page);
+  };
+  type FieldType = {
+    username?: string;
+    password?: string;
+    remember?: string;
+  };
+  const router = useRouter();
 
-      const { account, isAuthenticated, loading } = useSelector(
-        (state: RootState) => state.auth
-      );
-      useEffect(() => {
-        if (account?.isAdmin === false) {
-          router.push("/");
-        }
-      }, []);
-      const {
-        token: { colorBgContainer },
-      } = theme.useToken();
+  const { account, isAuthenticated, loading } = useSelector(
+    (state: RootState) => state.auth
+  );
+  useEffect(() => {
+    if (account?.isAdmin === false) {
+      router.push("/");
+    }
+  }, []);
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
   const onFinish = async (values: any) => {
     const refresh_token = localStorage.getItem("refresh_token");
     try {
@@ -96,159 +132,223 @@ const Admin = () => {
       }
     } catch (error: any) {
       toast.error("Sai mật khẩu hoặc tài khoản không tồn tại", error);
-    } 
+    }
   };
+  const handleOpenModal = () => {
+    setIsModalVisibleVoucher(true);
+  };
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
+  };
+  const handleEditMovie = (item: any) => {
+    try {
+      setSelectedItemEdit(item);
+    } catch {
+      console.log({
+        message: "An error has occurred. Please try again later.",
+        description: "Error",
+      });
+    } finally {
+      setIsModalVisibleEdit(true);
+    }
+  };
+  const handleDelete = async (item: any) => {
+    const token = localStorage.getItem("access_token");
 
-    const onFinishFailed = (errorInfo: any) => {
-      console.log("Failed:", errorInfo);
-    };
-      const handleEditMovie = (item: any) => {
-        try {
-          setSelectedItemEdit(item);
-        } catch {
-          console.log({
-            message: "An error has occurred. Please try again later.",
-            description: "Error",
-          });
-        } finally {
-          setIsModalVisibleEdit(true);
-        }
-    };
-    const handleDelete = async (item: any) => {
-      const token = localStorage.getItem("access_token");
+    const data = await deleteVideoAdmin(String(token), { id: item._id });
+    getData();
+  };
+  const columnsListJob: TableProps<any>["columns"] = [
+    {
+      title: "Id",
+      dataIndex: "_id",
+      key: "_id",
+      fixed: "left",
+    },
+    {
+      title: "Đạo diễn",
+      dataIndex: "author",
+      key: "author",
+      fixed: "left",
+    },
+    {
+      title: "Tên phim",
+      dataIndex: "movieName",
+      key: "movieName",
+      fixed: "left",
+    },
+    {
+      title: "Ngày ra mắt",
+      dataIndex: "dateRelease",
+      key: "dateRelease",
+    },
+    {
+      title: "Diễn Viên",
+      dataIndex: "actor",
+      key: "actor",
+    },
 
-        const data = await deleteVideoAdmin(String(token), { id: item._id });
-getData()    };
-    const columnsListJob: TableProps<any>["columns"] = [
-      {
-        title: "Id",
-        dataIndex: "_id",
-        key: "_id",
-        fixed: "left",
-      },
-      {
-        title: "Đạo diễn",
-        dataIndex: "author",
-        key: "author",
-        fixed: "left",
-      },
-      {
-        title: "Tên phim",
-        dataIndex: "movieName",
-        key: "movieName",
-        fixed: "left",
-      },
-      {
-        title: "Ngày ra mắt",
-        dataIndex: "dateRelease",
-        key: "dateRelease",
-      },
-      {
-        title: "Diễn Viên",
-        dataIndex: "actor",
-        key: "actor",
-      },
+    {
+      title: "Ảnh poster",
+      dataIndex: "thumbnails",
+      key: "thumbnails",
+      ellipsis: true,
+    },
+    {
+      title: "Link video phim",
+      dataIndex: "movies",
+      key: "movies",
+      ellipsis: true,
+    },
 
-      {
-        title: "Ảnh poster",
-        dataIndex: "thumbnails",
-        key: "thumbnails",
-        ellipsis: true,
-      },
-      {
-        title: "Link video phim",
-        dataIndex: "movies",
-        key: "movies",
-        ellipsis: true,
-      },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      render: (_, record) => (
+        <Dropdown
+          menu={{
+            items: [
+              {
+                label: <p onClick={() => handleEditMovie(record)}>Edit</p>,
+                key: "0",
+              },
+              {
+                type: "divider",
+              },
+              {
+                label: <p onClick={() => handleDelete(record)}>Delete</p>,
+                key: "1",
+              },
+            ],
+          }}
+          trigger={["click"]}
+        >
+          <a onClick={(e) => e.preventDefault()}>
+            <Space>More</Space>
+          </a>
+        </Dropdown>
+      ),
+    },
+  ];
+  const columnsListAcc: TableProps<any>["columns"] = [
+    {
+      title: "Id",
+      dataIndex: "_id",
+      key: "_id",
+      fixed: "left",
+    },
+    {
+      title: "Username",
+      dataIndex: "username",
+      key: "username",
+      fixed: "left",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      fixed: "left",
+    },
+    {
+      title: "Avatar",
+      dataIndex: "avatar",
+      key: "avatar",
+      ellipsis: true,
+    },
 
-      {
-        title: "Action",
-        dataIndex: "action",
-        key: "action",
-        render: (_, record) => (
-          <Dropdown
-            menu={{
-              items: [
-                {
-                  label: <p onClick={() => handleEditMovie(record)}>Edit</p>,
-                  key: "0",
-                },
-                {
-                  type: "divider",
-                },
-                {
-                  label: <p onClick={() => handleDelete(record)}>Delete</p>,
-                  key: "1",
-                },
-              ],
-            }}
-            trigger={["click"]}
-          >
-            <a onClick={(e) => e.preventDefault()}>
-              <Space>More</Space>
-            </a>
-          </Dropdown>
-        ),
-      },
-    ];
-     const columnsListAcc: TableProps<any>["columns"] = [
-       {
-         title: "Id",
-         dataIndex: "_id",
-         key: "_id",
-         fixed: "left",
-       },
-       {
-         title: "Username",
-         dataIndex: "username",
-         key: "username",
-         fixed: "left",
-       },
-       {
-         title: "Email",
-         dataIndex: "email",
-         key: "email",
-         fixed: "left",
-       },
-       {
-         title: "Avatar",
-         dataIndex: "avatar",
-           key: "avatar",
-         ellipsis:true
-       },
-
-       {
-         title: "Action",
-         dataIndex: "action",
-         key: "action",
-         render: (_, record) => (
-           <Dropdown
-             menu={{
-               items: [
-                 {
-                   label: <p onClick={() => handleEditMovie(record)}>Edit</p>,
-                   key: "0",
-                 },
-                 {
-                   type: "divider",
-                 },
-                 {
-                   label: <p onClick={() => handleDelete(record)}>Delete</p>,
-                   key: "1",
-                 },
-               ],
-             }}
-             trigger={["click"]}
-           >
-             <a onClick={(e) => e.preventDefault()}>
-               <Space>More</Space>
-             </a>
-           </Dropdown>
-         ),
-       },
-     ];
-    return (
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      render: (_, record) => (
+        <Dropdown
+          menu={{
+            items: [
+              {
+                label: <p onClick={() => handleEditMovie(record)}>Edit</p>,
+                key: "0",
+              },
+              {
+                type: "divider",
+              },
+              {
+                label: <p onClick={() => handleDelete(record)}>Delete</p>,
+                key: "1",
+              },
+            ],
+          }}
+          trigger={["click"]}
+        >
+          <a onClick={(e) => e.preventDefault()}>
+            <Space>More</Space>
+          </a>
+        </Dropdown>
+      ),
+    },
+  ];
+   const columnsListVoucher: TableProps<any>["columns"] = [
+     {
+       title: "Id",
+       dataIndex: "_id",
+       key: "_id",
+       fixed: "left",
+     },
+     {
+       title: "Tên Voucher",
+       dataIndex: "voucher",
+       key: "voucher",
+       fixed: "left",
+     },
+     {
+       title: "Thông tin",
+       dataIndex: "detail",
+       key: "detail",
+       fixed: "left",
+       render: (text, record) => (
+         <ul>
+           {Array.isArray(text)
+             ? text.map((item, index) => <li key={index}>{item}</li>)
+             : Object.entries(text).map(([key, value]) => (
+                 <li key={key}>
+                   {key}: {value}
+                 </li>
+               ))}
+         </ul>
+       ),
+     },
+     {
+       title: "Action",
+       dataIndex: "action",
+       key: "action",
+       render: (_, record) => (
+         <Dropdown
+           menu={{
+             items: [
+               {
+                 label: <p onClick={() => handleEditMovie(record)}>Edit</p>,
+                 key: "0",
+               },
+               {
+                 type: "divider",
+               },
+               {
+                 label: <p onClick={() => handleDelete(record)}>Delete</p>,
+                 key: "1",
+               },
+             ],
+           }}
+           trigger={["click"]}
+         >
+           <a onClick={(e) => e.preventDefault()}>
+             <Space>More</Space>
+           </a>
+         </Dropdown>
+       ),
+     },
+   ];
+  return (
+    <Page title={PAGE_TITLE.PROFILE} loadingData={false}>
       <div>
         {" "}
         <Layout>
@@ -268,13 +368,13 @@ getData()    };
                 {
                   key: "2",
                   icon: <VideoCameraOutlined />,
-                  label: "nav 2",
+                  label: "Danh sách tài khoản",
                   onClick: () => setSelectedMenu("2"),
                 },
                 {
                   key: "3",
                   icon: <UploadOutlined />,
-                  label: "nav 3",
+                  label: "Danh sách Voucher",
                   onClick: () => setSelectedMenu("3"),
                 },
               ]}
@@ -329,7 +429,21 @@ getData()    };
                   ></Pagination>
                 </div>
               )}
-              {selectedMenu === "3" && "nav 3"}{" "}
+              {selectedMenu === "3" && (
+                <div>
+                  <Button onClick={handleOpenModal}>Add Voucher</Button>
+                  <Table
+                    pagination={false}
+                    dataSource={listVoucher.data}
+                    columns={columnsListVoucher}
+                  />
+                  {/* <Pagination
+                      current={current}
+                      onChange={onChangePage}
+                      total={5}
+                    ></Pagination> */}
+                </div>
+              )}{" "}
             </Content>
           </Layout>
         </Layout>
@@ -340,7 +454,13 @@ getData()    };
           handleCancel={handleCloseModalEditMovie}
           selectedItem={selectedItemEdit}
         ></ModalEditMovieAdmin>
+        <ModalAddVoucher
+          // getData={getData()}
+          open={isModalVisibleVoucher}
+          handleCancel={handleCloseModalVoucher}
+        ></ModalAddVoucher>
       </div>
-    );
-}
-export default Admin
+    </Page>
+  );
+};
+export default Admin;

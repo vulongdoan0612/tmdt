@@ -254,7 +254,6 @@ export const deleteVideoAdmin = async (accessToken: string,id:any) => {
   const config = {
     method: "DELETE",
     data: id,
-
     url: `/delete-movie-foradmin`,
     headers: {
       Authorization: accessToken,
@@ -263,3 +262,35 @@ export const deleteVideoAdmin = async (accessToken: string,id:any) => {
 
   return axios(config);
 };
+  export const buyVoucher = async (data: any, accessToken: any) => {
+    const config = {
+      method: "POST",
+      url: `/buy-voucher`,
+      data: data,
+      headers: {
+        Authorization: accessToken,
+      },
+    };
+
+    return axios(config);
+  };  export const createVoucher = async (data: any, accessToken: any) => {
+    const config = {
+      method: "POST",
+      url: `/create-voucher`,
+      data: data,
+      headers: {
+        Authorization: accessToken,
+      },
+    };
+
+    return axios(config);
+};
+  export const getAllVoucher = async () => {
+    const config = {
+      method: "GET",
+      url: `/all-voucher`,
+
+    };
+
+    return axios(config);
+  };
