@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import ModalAddVoucher from "@/components/ModalAddVoucher";
 import ModalEditMovie from "@/components/ModalEditMovie";
 import ModalEditMovieAdmin from "@/components/ModalEditMovieAdmin";
+import ModalEditVoucher from "@/components/ModalEditVoucher";
 import { PAGE_TITLE } from "@/constants";
 import Page from "@/layout/Page";
 import { RootState } from "@/redux/store";
@@ -43,6 +44,8 @@ const Admin = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("1");
   const [selectedItemEdit, setSelectedItemEdit] = useState([]);
+    const [selectedItemVoucher, setSelectedItemVoucher] = useState([]);
+
   const [filmMaker, setFilmMaker] = useState<any>([]);
   const [acc, setAcc] = useState<any>([]);
   const [listVoucher, setListVoucher] = useState<any>([]);
@@ -51,6 +54,9 @@ const Admin = () => {
     useState<boolean>(false);
 
   const [isModalVisibleEdit, setIsModalVisibleEdit] = useState<boolean>(false);
+    const [isModalVisibleEditVoucher, setIsModalVisibleEditVoucher] =
+      useState<boolean>(false);
+
   const [current, setCurrent] = useState(1);
   const [currentAcc, setCurrentAcc] = useState(1);
 
@@ -82,6 +88,9 @@ const Admin = () => {
   const handleCloseModalVoucher = () => {
     setIsModalVisibleVoucher(false);
   };
+    const handleCloseModalVoucherEdit = () => {
+      setIsModalVisibleEditVoucher(false);
+    };
   const onChangePage = (page: number) => {
     setCurrent(page);
   };
@@ -106,40 +115,11 @@ const Admin = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const onFinish = async (values: any) => {
-    const refresh_token = localStorage.getItem("refresh_token");
-    try {
-      const dataLogin = {
-        email: values?.email,
-        password: values?.password,
-      };
-      console.log(dataLogin, values);
-      const response = await loginAdmin(dataLogin);
-      console.log(response);
-      if (response.status === 200 && response?.data?.token) {
-        try {
-          localStorage.setItem("access_token_admin", response?.data?.token);
-          localStorage.setItem(
-            "refresh_token_admin",
-            response?.data?.refreshToken
-          );
-          localStorage.setItem("role", response?.data?.role);
-        } catch {
-        } finally {
-        }
-      } else if (response.status === 401) {
-        toast.error("Sai mật khẩu hoặc tài khoản không tồn tại");
-      }
-    } catch (error: any) {
-      toast.error("Sai mật khẩu hoặc tài khoản không tồn tại", error);
-    }
-  };
+
   const handleOpenModal = () => {
     setIsModalVisibleVoucher(true);
   };
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-  };
+
   const handleEditMovie = (item: any) => {
     try {
       setSelectedItemEdit(item);
@@ -152,12 +132,32 @@ const Admin = () => {
       setIsModalVisibleEdit(true);
     }
   };
+  const handleEditVoucher = (item: any) => {
+    try {
+          console.log(item);
+          setSelectedItemVoucher(item);
+        } catch {
+          
+          console.log({
+            message: "An error has occurred. Please try again later.",
+            description: "Error",
+          });
+        } finally {
+          setIsModalVisibleEditVoucher(true);
+        }
+  }
   const handleDelete = async (item: any) => {
     const token = localStorage.getItem("access_token");
 
     const data = await deleteVideoAdmin(String(token), { id: item._id });
     getData();
   };
+    const handleDeleteVoucher = async (item: any) => {
+      const token = localStorage.getItem("access_token");
+
+      const data = await deleteVideoAdmin(String(token), { id: item._id });
+      getAllVoucher();
+    };
   const columnsListJob: TableProps<any>["columns"] = [
     {
       title: "Id",
@@ -209,13 +209,6 @@ const Admin = () => {
         <Dropdown
           menu={{
             items: [
-              {
-                label: <p onClick={() => handleEditMovie(record)}>Edit</p>,
-                key: "0",
-              },
-              {
-                type: "divider",
-              },
               {
                 label: <p onClick={() => handleDelete(record)}>Delete</p>,
                 key: "1",
@@ -326,14 +319,14 @@ const Admin = () => {
            menu={{
              items: [
                {
-                 label: <p onClick={() => handleEditMovie(record)}>Edit</p>,
+                 label: <p onClick={() => handleEditVoucher(record)}>Edit</p>,
                  key: "0",
                },
                {
                  type: "divider",
                },
                {
-                 label: <p onClick={() => handleDelete(record)}>Delete</p>,
+                 label: <p onClick={() => handleDeleteVoucher(record)}>Delete</p>,
                  key: "1",
                },
              ],
@@ -349,7 +342,7 @@ const Admin = () => {
    ];
   return (
     <Page title={PAGE_TITLE.PROFILE} loadingData={false}>
-      <div>
+      <div className="admin-page">
         {" "}
         <Layout>
           <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -459,6 +452,13 @@ const Admin = () => {
           open={isModalVisibleVoucher}
           handleCancel={handleCloseModalVoucher}
         ></ModalAddVoucher>
+        <ModalEditVoucher
+          selectedItemVoucher={selectedItemVoucher}
+          // getData={getData()}
+          getListVoucher={getListVoucher}
+          open={isModalVisibleEditVoucher}
+          handleCancel={handleCloseModalVoucherEdit}
+        ></ModalEditVoucher>
       </div>
     </Page>
   );

@@ -3,7 +3,7 @@ import { PAGE_TITLE } from "@/constants";
 import Page from "@/layout/Page";
 import { RootState } from "@/redux/store";
 import { logout } from "@/services/account";
-import { Button, Image, Modal, Tabs } from "antd";
+import { Button, Image, Modal, Table, TableProps, Tabs } from "antd";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,9 +12,9 @@ const Profile = () => {
   const { account, isAuthenticated, loading } = useSelector(
     (state: RootState) => state.auth
   );
-    const [confirmLoading, setConfirmLoading] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
 
-    const router = useRouter();
+  const router = useRouter();
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
@@ -22,29 +22,58 @@ const Profile = () => {
   const handleCloseModalEdit = () => {
     setIsModalVisible(false);
   };
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const handleEdit = () => {
     setIsModalVisible(true);
   };
   const logOut = () => {
-    setOpen(true)
-      //  router.push("/");
-      //  logout(dispatch);
-  }
+    setOpen(true);
+    //  router.push("/");
+    //  logout(dispatch);
+  };
   const handleOk = () => {
-     router.push("/");
-     logout(dispatch);
+    router.push("/");
+    logout(dispatch);
     setConfirmLoading(true);
   };
-    const handleCancel = () => {
-      console.log("Clicked cancel button");
-      setOpen(false);
-    };
-  console.log(account)
+  const handleCancel = () => {
+    console.log("Clicked cancel button");
+    setOpen(false);
+  };
+    const columnsListJob: TableProps<any>["columns"] = [
+      {
+        title: "Id",
+        dataIndex: "_id",
+        key: "_id",
+      },
+      {
+        title: "Tên Voucher",
+        dataIndex: "typeOfVoucher",
+        key: "typeOfVoucher",
+        fixed: "left",
+      },
+      {
+        title: "Thời gian mua",
+        dataIndex: "date",
+        key: "date",
+      },
+    ];
+  console.log(account);
   return (
     <Page title={PAGE_TITLE.PROFILE} loadingData={false}>
       <div className="profile-page-wrapper">
+        <span
+          style={{
+            color: "white",
+            textAlign: "right",
+            marginBottom: "3rem",
+            cursor: "pointer",
+          }}
+          onClick={logOut}
+        >
+          Đăng xuất tài khoản
+        </span>
         <Tabs
           defaultActiveKey="1"
           tabPosition="left"
@@ -52,11 +81,6 @@ const Profile = () => {
             {
               label: <span style={{ color: "white" }}>Thông tin cá nhân</span>,
               key: "1",
-              children: <div style={{ color: "white" }}>Content of tab 1</div>,
-            },
-            {
-              label: <span style={{ color: "white" }}>Lịch sử giao dịch</span>,
-              key: "2",
               children: (
                 <div style={{ color: "white" }} className="information-profile">
                   <div className="information">
@@ -88,7 +112,8 @@ const Profile = () => {
                         <span>Tài khoản</span> <span>02939329</span>
                       </div>
                       <div className="accountnumber">
-                        <span>Rank</span> <span>{account?.voucher ? account?.voucher : ''}</span>
+                        <span>Rank</span>{" "}
+                        <span>{account?.voucher ? account?.voucher : "Chưa mua voucher"}</span>
                       </div>
                       <div className="idnumber">
                         <span>ID</span> <span>{account?._id}</span>
@@ -97,11 +122,11 @@ const Profile = () => {
                         <div className="email-left">
                           <span>E-mail</span> <span>{account?.email}</span>
                         </div>
-                        <div className="change">Thay đổi</div>
+                        <div className="change">Thay đổi </div>
                       </div>
                       <div className="location">
                         <div className="location-left">
-                          <span>Khu vực</span> <span>Chưa cập nhật</span>
+                          <span>Khu vực</span><span></span>
                         </div>
                         <div className="change">Thay đổi</div>
                       </div>
@@ -117,12 +142,18 @@ const Profile = () => {
               ),
             },
             {
-              label: (
-                <span style={{ color: "white" }} onClick={logOut}>
-                  Đăng xuất tài khoản
-                </span>
+              label: <span style={{ color: "white" }}>Lịch sử giao dịch</span>,
+              key: "2",
+              children: (
+                <div style={{ color: "white" }}>
+                  {" "}
+                  <Table
+                    pagination={false}
+                    dataSource={account?.historyBuy}
+                    columns={columnsListJob}
+                  />
+                </div>
               ),
-              key: "3",
             },
           ]}
         />

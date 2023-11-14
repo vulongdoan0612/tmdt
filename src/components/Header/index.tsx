@@ -322,7 +322,7 @@ useDidMountEffect(() => {
         </button>
         {account?.username ? (
           <span className="username" onClick={handleProfile}>
-            {limitText(account.username)}
+            {limitText(account.username)} {account?.isMaker && 'Film Maker'}
           </span>
         ) : (
           <span className="login" onClick={showModal}>
@@ -332,7 +332,7 @@ useDidMountEffect(() => {
       </div>
       <Modal
         className="modal-signin"
-        title="Title"
+        title="Đăng Nhập"
         open={open}
         footer={null}
         onOk={handleOk}
@@ -416,7 +416,7 @@ useDidMountEffect(() => {
       </Modal>
       <Modal
         className="modal-signin"
-        title="Title"
+        title="Đăng ký"
         open={openSignup}
         footer={null}
         onOk={handleOkSignup}
@@ -582,58 +582,57 @@ useDidMountEffect(() => {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Email!",
+              },
+            ]}
+          >
+            <Input placeholder="Email" />
+          </Form.Item>
 
-            <Form.Item
-              name="email"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your Email!",
-                },
-              ]}
-            >
-              <Input placeholder="Email" />
-            </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+            ]}
+          >
+            <Input.Password placeholder="Mật khẩu" />
+          </Form.Item>
 
-            <Form.Item
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your password!",
-                },
-              ]}
-            >
-              <Input.Password placeholder="Mật khẩu" />
-            </Form.Item>
+          <Form.Item
+            name="remember"
+            wrapperCol={{
+              offset: 8,
+              span: 16,
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span onClick={forgotPass} style={{ cursor: "pointer" }}>
+                Quên mật khẩu
+              </span>
+              <span style={{ cursor: "pointer" }} onClick={openUser}>
+                Bạn là người xem ?
+              </span>
+            </div>
+          </Form.Item>
 
-            <Form.Item
-              name="remember"
-              wrapperCol={{
-                offset: 8,
-                span: 16,
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span onClick={forgotPass} style={{ cursor: "pointer" }}>
-                  Quên mật khẩu
-                </span>
-                <span style={{ cursor: "pointer" }} onClick={openUser}>
-                  Bạn là người xem ?
-                </span>
-              </div>
-            </Form.Item>
-
-            <Form.Item
-              wrapperCol={{
-                offset: 8,
-                span: 16,
-              }}
-            >
-              <Button type="primary" htmlType="submit">
-                Đăng nhập
-              </Button>
-            </Form.Item>
+          <Form.Item
+            wrapperCol={{
+              offset: 8,
+              span: 16,
+            }}
+          >
+            <Button type="primary" htmlType="submit">
+              Đăng nhập
+            </Button>
+          </Form.Item>
           <span className="signup" onClick={handleSignUpFilmMaker}>
             Chưa có tài khoản nhà làm phim? Đăng ký miễn phí
           </span>

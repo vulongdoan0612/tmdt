@@ -1,15 +1,19 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, FreeMode } from "swiper/modules";
-import { Image } from "antd";
+import { Image, Modal } from "antd";
 import { useEffect, useState } from "react";
 import { getAllFilm } from "@/services/account";
 import { useRouter } from "next/router";
 import "swiper/css";
 import "swiper/css/navigation";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const [films, setFilms] = useState<any>([]);
   const router = useRouter();
+    const { account } = useSelector((state: RootState) => state.auth);
+const [open,setOpen]=useState(false)
   const getFilm = async () => {
     const token = localStorage.getItem("access_token");
 
@@ -19,14 +23,23 @@ const Home = () => {
   useEffect(() => {
     getFilm();
   }, []);
-  console.log(films);
   const handleRouter = (item: any) => {
-    console.log(item);
-    router.push(`/video/${item}`);
+    if (account?.username !== undefined) {
+      router.push(`/video/${item}`);
+    } else {
+      setOpen(true)
+    }
+    
+  };
+   const handleCancel = () => {
+     setOpen(false);
+  };
+  const handleOk = () => {
+    setOpen(false);
   };
   return (
     <div className="home-wrapper">
-            <h1 className="title">Danh mục</h1>
+      <h1 className="title">Danh mục</h1>
 
       <Swiper
         slidesPerView={5}
@@ -91,7 +104,7 @@ const Home = () => {
         className="mySwiper-movie"
       >
         <div>
-          {films?.data?.map((item: any,index:any) => {
+          {films?.data?.map((item: any, index: any) => {
             return (
               <SwiperSlide key={index}>
                 <div onClick={() => handleRouter(item._id)}>
@@ -103,6 +116,13 @@ const Home = () => {
           })}
         </div>
       </Swiper>
+      <Modal
+        open={open}
+        onOk={handleOk}
+        cancelButtonProps={{ style: { display: "none" } }}
+      >
+        Vui lòng đăng nhập để xem phim
+      </Modal>
     </div>
   );
 };

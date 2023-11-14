@@ -59,11 +59,11 @@ const CMS = () => {
   const [filmMaker,setFilmMaker]=useState<any>([])
   const getData=async()=>{
     const token = localStorage.getItem("access_token");
-    if (account?.isMaker) {
+    console.log(account);
       
       const data =await getAllFilmMaker(String(token))
       setFilmMaker(data)
-    }
+    
   }
   useEffect(()=>{
     getData()
@@ -167,87 +167,90 @@ const CMS = () => {
   ];
   return (
     <Page title={PAGE_TITLE.PROFILE} loadingData={false}>
-      <Layout>
-        <Sider trigger={null} collapsible collapsed={collapsed}>
-          <div className="demo-logo-vertical" />
-          <Menu
-            theme="dark"
-            mode="inline"
-            defaultSelectedKeys={[selectedMenu]}
-            items={[
-              {
-                key: "1",
-                icon: <UserOutlined />,
-                label: "Phim của tôi",
-                onClick: () => setSelectedMenu("1"),
-              },
-              {
-                key: "2",
-                icon: <VideoCameraOutlined />,
-                label: "nav 2",
-                onClick: () => setSelectedMenu("2"),
-              },
-              {
-                key: "3",
-                icon: <UploadOutlined />,
-                label: "nav 3",
-                onClick: () => setSelectedMenu("3"),
-              },
-            ]}
-          />
-        </Sider>
+      <div className="cms-page">
         <Layout>
-          <Header style={{ padding: 0, background: colorBgContainer }}>
-            <Button
-              type="text"
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => setCollapsed(!collapsed)}
-              style={{
-                fontSize: "16px",
-                width: 64,
-                height: 64,
-              }}
+          <Sider trigger={null} collapsible collapsed={collapsed}>
+            <div className="demo-logo-vertical" />
+            <Menu
+              theme="dark"
+              mode="inline"
+              defaultSelectedKeys={[selectedMenu]}
+              items={[
+                {
+                  key: "1",
+                  icon: <UserOutlined />,
+                  label: "Phim của tôi",
+                  onClick: () => setSelectedMenu("1"),
+                },
+                {
+                  key: "2",
+                  icon: <VideoCameraOutlined />,
+                  label: "nav 2",
+                  onClick: () => setSelectedMenu("2"),
+                },
+                {
+                  key: "3",
+                  icon: <UploadOutlined />,
+                  label: "nav 3",
+                  onClick: () => setSelectedMenu("3"),
+                },
+              ]}
             />
-          </Header>
-          <Content
-            style={{
-              margin: "24px 16px",
-              padding: 24,
-              minHeight: 280,
-              background: colorBgContainer,
-            }}
-          >
-            {selectedMenu === "1" && (
-              <div>
-                <Button onClick={handleAddMovie}>ADD MOVIE</Button>
-                <Table
-                  pagination={false}
-                  dataSource={filmMaker?.data}
-                  columns={columnsListJob}
-                />
-                <Pagination
-                  current={current}
-                  onChange={onChangePage}
-                  total={filmMaker?.data?.length}
-                ></Pagination>
-              </div>
-            )}
-            {selectedMenu === "2" && "Content 2"}
-            {selectedMenu === "3" && "nav 3"}{" "}
-          </Content>
+          </Sider>
+          <Layout>
+            <Header style={{ padding: 0, background: colorBgContainer }}>
+              <Button
+                type="text"
+                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                onClick={() => setCollapsed(!collapsed)}
+                style={{
+                  fontSize: "16px",
+                  width: 64,
+                  height: 64,
+                }}
+              />
+            </Header>
+            <Content
+              style={{
+                margin: "24px 16px",
+                padding: 24,
+                minHeight: 280,
+                background: colorBgContainer,
+              }}
+            >
+              {selectedMenu === "1" && (
+                <div>
+                  <Button onClick={handleAddMovie}>ADD MOVIE</Button>
+                  <Table
+                    pagination={false}
+                    dataSource={filmMaker?.data}
+                    columns={columnsListJob}
+                  />
+                  <Pagination
+                    current={current}
+                    onChange={onChangePage}
+                    total={filmMaker?.data?.length}
+                  ></Pagination>
+                </div>
+              )}
+              {selectedMenu === "2" && "Content 2"}
+              {selectedMenu === "3" && "nav 3"}{" "}
+            </Content>
+          </Layout>
         </Layout>
-      </Layout>
-      <ModalAddMovie
-        open={isModalVisiblePlan}
-        handleCancel={handleCloseModalAddMovie}
-      ></ModalAddMovie>
-      <ModalEditMovie
-        setFilmMaker={setFilmMaker}
-        // getData={getData()}
-        open={isModalVisibleEdit}
-        handleCancel={handleCloseModalEditMovie}
-        selectedItem={selectedItemEdit}
-      ></ModalEditMovie>
+        <ModalAddMovie
+          getData={getData}
+          open={isModalVisiblePlan}
+          handleCancel={handleCloseModalAddMovie}
+        ></ModalAddMovie>
+        <ModalEditMovie
+          setFilmMaker={setFilmMaker}
+          // getData={getData()}
+          open={isModalVisibleEdit}
+          handleCancel={handleCloseModalEditMovie}
+          selectedItem={selectedItemEdit}
+        ></ModalEditMovie>
+      </div>
     </Page>
   );
 };

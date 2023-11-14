@@ -8,4 +8,20 @@
         height: 500px !important;
         padding-top: 0 !important;
     }
+    .description{
+        display: flex;
+        flex-direction: column;
+    }
+    .title{
+        color:white;
+    }
+    .author{
+        color:white;
+    }
+    .date{
+        color:white;
+    }
+    .actor{
+        color:white;
+    }
 }

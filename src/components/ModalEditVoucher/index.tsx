@@ -1,43 +1,54 @@
-import { Button, Form, Input, Radio, RadioChangeEvent, Select, Space } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Radio,
+  RadioChangeEvent,
+  Select,
+  Space,
+} from "antd";
 import CustomModal from "../CustomModal";
 import { useState } from "react";
-import { buyVoucher, createVoucher } from "@/services/account";
+import { buyVoucher, createVoucher, editVoucher } from "@/services/account";
 import { toast } from "react-toastify";
 
-const ModalAddVoucher = ({ vip, open, handleCancel }: any) => {
-//   const [value, setValue] = useState(1);
+const ModalEditVoucher = ({ selectedItemVoucher,getListVoucher, open, handleCancel }: any) => {
+  //   const [value, setValue] = useState(1);
   const [form] = Form.useForm();
-
-  const onFinish = async(values: any) => {
+  console.log(selectedItemVoucher);
+  const onFinish = async (values: any) => {
     console.log(values);
     const token = localStorage.getItem("access_token");
-    const data = await createVoucher(values , token);
+    console.log(selectedItemVoucher);
+    const data = await editVoucher({
+      newVoucherData: values,
+      voucherId: selectedItemVoucher._id,
+    });
+    console.log(data);
     toast.success(data.data.message);
-    handleCancel();
+      getListVoucher();
+      handleCancel();
   };
-  const onChange = (e: RadioChangeEvent) => {
-    console.log("radio checked", e.target.value);
-    // setValue(e.target.value);
-    };
-      const options = [];
-      for (let i = 10; i < 36; i++) {
-        options.push({
-          value: i.toString(36) + i,
-          label: i.toString(36) + i,
-        });
-      }
+
+  const options = [];
+  for (let i = 10; i < 36; i++) {
+    options.push({
+      value: i.toString(36) + i,
+      label: i.toString(36) + i,
+    });
+  }
   const handleAdd = async () => {
     // const token = localStorage.getItem("access_token");
     // const data = await buyVoucher({ typeOfVoucher: vip }, token);
     // toast.success(data.data.message);
     // handleCancel();
-    };
-    const handleChange = (value: string) => {
-      console.log(`selected ${value}`);
-    };
+  };
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
   return (
     <CustomModal
-      title={"Tạo voucher"}
+      title={"Sửa Voucher"}
       open={open}
       onCancel={handleCancel}
       className="modal-banner"
@@ -70,9 +81,9 @@ const ModalAddVoucher = ({ vip, open, handleCancel }: any) => {
             options={options}
           />
         </Form.Item>
-        <Button htmlType="submit">Tạo</Button>
+        <Button htmlType="submit">Sửa</Button>
       </Form>
     </CustomModal>
   );
 };
-export default ModalAddVoucher;
+export default ModalEditVoucher;

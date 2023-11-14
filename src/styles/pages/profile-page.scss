@@ -1,11 +1,16 @@
 .profile-page-wrapper {
-  width: 100%;
+  width: 80%;
+  margin: auto;
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  .ant-tabs-nav-list {
+    height: 100%;
+  }
   .ant-tabs {
     width: 80%;
-    .ant-tabs-content-holder{
-      border-left:none;
+    .ant-tabs-content-holder {
+      border-left: none;
     }
     .information-profile {
       .information {
@@ -65,57 +70,58 @@
             ),
             #202020;
           border-radius: 8px;
-          .accountnumber{
-    padding: 27.5px 0;
-    border-bottom: 1px solid #2c2c2e;            display: flex;
-            gap:1rem;
+          .accountnumber {
+            padding: 27.5px 0;
+            border-bottom: 1px solid #2c2c2e;
+            display: flex;
+            gap: 1rem;
           }
-          .idnumber{    padding: 27.5px 0;
-    border-bottom: 1px solid #2c2c2e;
-display: flex;
-            gap:1rem;
+          .idnumber {
+            padding: 27.5px 0;
+            border-bottom: 1px solid #2c2c2e;
+            display: flex;
+            gap: 1rem;
           }
-          .email{    padding: 27.5px 0;
-    border-bottom: 1px solid #2c2c2e;
+          .email {
+            padding: 27.5px 0;
+            border-bottom: 1px solid #2c2c2e;
             display: flex;
             justify-content: space-between;
-            .email-left{
+            .email-left {
               display: flex;
               gap: 1rem;
             }
-            .change{
+            .change {
               cursor: pointer;
             }
           }
-          .location{    padding: 27.5px 0;
-    border-bottom: 1px solid #2c2c2e;
+          .location {
+            padding: 27.5px 0;
+            border-bottom: 1px solid #2c2c2e;
             display: flex;
             justify-content: space-between;
-            .location-left{
+            .location-left {
               display: flex;
-              gap:1rem;
+              gap: 1rem;
             }
-            .change{
+            .change {
               cursor: pointer;
-
             }
           }
-          .password{    
+          .password {
             padding-top: 27.5px;
             padding-bottom: 10px;
             display: flex;
-            justify-content: space-between  ;
-            .password-left{
+            justify-content: space-between;
+            .password-left {
               display: flex;
-              gap:1rem;
+              gap: 1rem;
               align-items: center;
             }
-            .change{
+            .change {
               cursor: pointer;
-
             }
           }
-
         }
       }
     }
