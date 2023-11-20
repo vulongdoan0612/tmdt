@@ -17,7 +17,7 @@ const [open,setOpen]=useState(false)
   const getFilm = async () => {
     const token = localStorage.getItem("access_token");
 
-    const data = await getAllFilm(String(token));
+    const data = await getAllFilm(String(token), { censorship :"true"});
     setFilms(data);
   };
   useEffect(() => {

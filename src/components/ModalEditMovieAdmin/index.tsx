@@ -46,7 +46,7 @@ const ModalEditMovieAdmin = ({
   const getData = async () => {
     const token = localStorage.getItem("access_token");
 
-    const data = await getAllFilm(String(token));
+    const data = await getAllFilm(String(token),{});
     setFilmMaker(data);
   };
   const onFinish = async (values: any) => {

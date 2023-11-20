@@ -1,16 +1,27 @@
 import ModalPayment from "@/components/ModalPayment";
 import { PAGE_TITLE } from "@/constants";
 import Page from "@/layout/Page";
+import { getAllVoucher } from "@/services/account";
 import { Button } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Voucher = () => {
       const [isModalVisibleEdit, setIsModalVisibleEdit] =
         useState<boolean>(false);
-    const [value,setValue]=useState('')
+  const [value, setValue] = useState('')
+  const [dataVoucher,setDataVoucher]=useState<any>([])
    const handleCloseModalEditMovie = () => {
      setIsModalVisibleEdit(false);
-    }; 
+  }; 
+  const getData = async () => {
+    const data = await getAllVoucher()
+    console.log(data);
+    setDataVoucher(data);
+  }
+  useEffect(() => {
+    getData()
+    console.log(dataVoucher);
+  },[])
     const handleOpenModal = (item:string) => {
         setIsModalVisibleEdit(true)
         setValue(item)
@@ -18,54 +29,27 @@ const Voucher = () => {
   return (
     <Page title={PAGE_TITLE.PROFILE} loadingData={false}>
       <div className="voucher">
-        <div className="wrapper-voucher">
-          <div className="voucher-box ">
-            <div className="title">200D</div>
-            <div className="info">
-              <span>Xem phim tốt</span>
-              <span>Không quảng cáo</span>
-              <span>Gía rẻ</span>
-              <span>Đa thiết bị</span>
-              <span>Không quảng cáo</span>
-              <span>Gía rẻ</span>
-              <span>Đa thiết bị</span>
+        {dataVoucher?.data?.map((item:any,key:any) => {
+          return (
+            <div className="wrapper-voucher" key={key}>
+              <div className="voucher-box ">
+                <div className="title">{item.voucher}</div>
+                <div className="info">
+
+                  {item?.detail?.map((item: any, key: any) => {
+                    return <span key={key}>{item}</span>;
+                  })}
+                  {/* {console.log(item.detail)} */}
+                </div>
+              </div>
+              <Button onClick={() => handleOpenModal("vip1")}>Mua Gói</Button>
             </div>
-          </div>
-          <Button onClick={() => handleOpenModal("vip1")}>Mua Gói</Button>
-        </div>
-        <div className="wrapper-voucher">
-          <div className="voucher-box ">
-            <div className="title">200D</div>
-            <div className="info">
-              <span>Xem phim tốt</span>
-              <span>Không quảng cáo</span>
-              <span>Gía rẻ</span>
-              <span>Đa thiết bị</span>
-              <span>Không quảng cáo</span>
-              <span>Gía rẻ</span>
-              <span>Đa thiết bị</span>
-            </div>
-          </div>
-          <Button onClick={() => handleOpenModal("vip2")}>Mua Gói</Button>
-        </div>{" "}
-        <div className="wrapper-voucher">
-          <div className="voucher-box ">
-            <div className="title">200D</div>
-            <div className="info">
-              <span>Xem phim tốt</span>
-              <span>Không quảng cáo</span>
-              <span>Gía rẻ</span>
-              <span>Đa thiết bị</span>
-              <span>Không quảng cáo</span>
-              <span>Gía rẻ</span>
-              <span>Đa thiết bị</span>
-            </div>
-          </div>
-          <Button onClick={() => handleOpenModal("vip3")}>Mua Gói</Button>
-        </div>
+          );
+        })}
+
       </div>
-          <ModalPayment
-              vip={value}
+      <ModalPayment
+        vip={value}
         open={isModalVisibleEdit}
         handleCancel={handleCloseModalEditMovie}
       ></ModalPayment>

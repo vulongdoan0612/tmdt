@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import ModalAddVoucher from "@/components/ModalAddVoucher";
+import ModalCensorShip from "@/components/ModalCensorShip";
 import ModalEditMovie from "@/components/ModalEditMovie";
 import ModalEditMovieAdmin from "@/components/ModalEditMovieAdmin";
 import ModalEditVoucher from "@/components/ModalEditVoucher";
@@ -12,6 +13,7 @@ import {
   getAllVoucher,
 } from "@/services/account";
 import { getAcc, loginAdmin } from "@/services/admin";
+import { updateCensorship } from "@/services/movie";
 
 import {
   MenuFoldOutlined,
@@ -44,12 +46,15 @@ const Admin = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("1");
   const [selectedItemEdit, setSelectedItemEdit] = useState([]);
+    const [selectedItemCensor, setSelectedItemCensor] = useState([]);
+
     const [selectedItemVoucher, setSelectedItemVoucher] = useState([]);
+  const [filmMakerAll, setFilmMakerAll] = useState<any>([]);
 
   const [filmMaker, setFilmMaker] = useState<any>([]);
   const [acc, setAcc] = useState<any>([]);
   const [listVoucher, setListVoucher] = useState<any>([]);
-
+  const [modal,setModal]=useState(false)
   const [isModalVisibleVoucher, setIsModalVisibleVoucher] =
     useState<boolean>(false);
 
@@ -64,9 +69,16 @@ const Admin = () => {
   const getData = async () => {
     const token = localStorage.getItem("access_token_admin");
 
-    const data = await getAllFilm(String(token));
+    const data = await getAllFilm(String(token),{censorship:"true"});
     setFilmMaker(data);
   };
+    const getDataAll = async () => {
+      const token = localStorage.getItem("access_token_admin");
+
+      const data = await getAllFilm(String(token), {});
+      console.log(data);
+      setFilmMakerAll(data);
+    };
   const getDataAcc = async () => {
     const token = localStorage.getItem("access_token_admin");
 
@@ -79,12 +91,16 @@ const Admin = () => {
   };
   useEffect(() => {
     getDataAcc();
+    getDataAll();
     getListVoucher();
     getData();
   }, []);
   const handleCloseModalEditMovie = () => {
     setIsModalVisibleEdit(false);
   };
+    const handleCloseModalCensor = () => {
+      setModal(false);
+    };
   const handleCloseModalVoucher = () => {
     setIsModalVisibleVoucher(false);
   };
@@ -157,7 +173,21 @@ const Admin = () => {
 
       const data = await deleteVideoAdmin(String(token), { id: item._id });
       getAllVoucher();
-    };
+  };
+  const handleCensor =  (item: any) => {
+    try {
+      
+      setSelectedItemCensor(item);
+    }
+    catch {
+      
+    }
+    finally {
+      setModal(true)
+      
+    }
+    // await updateCensorship({idMovie:})
+  }
   const columnsListJob: TableProps<any>["columns"] = [
     {
       title: "Id",
@@ -224,6 +254,81 @@ const Admin = () => {
       ),
     },
   ];
+    const columnsListJobAll: TableProps<any>["columns"] = [
+      {
+        title: "Id",
+        dataIndex: "_id",
+        key: "_id",
+        fixed: "left",
+      },
+      {
+        title: "Đạo diễn",
+        dataIndex: "author",
+        key: "author",
+        fixed: "left",
+      },
+      {
+        title: "Tên phim",
+        dataIndex: "movieName",
+        key: "movieName",
+        fixed: "left",
+      },
+      {
+        title: "Ngày ra mắt",
+        dataIndex: "dateRelease",
+        key: "dateRelease",
+      },
+      {
+        title: "Diễn Viên",
+        dataIndex: "actor",
+        key: "actor",
+      },
+
+      {
+        title: "Ảnh poster",
+        dataIndex: "thumbnails",
+        key: "thumbnails",
+        ellipsis: true,
+      },
+      {
+        title: "Link video phim",
+        dataIndex: "movies",
+        key: "movies",
+        ellipsis: true,
+      },
+      {
+        title: "Trạng thái phim",
+        dataIndex: "censorship",
+        key: "censorship",
+        ellipsis: true,
+      },
+      {
+        title: "Action",
+        dataIndex: "action",
+        key: "action",
+        render: (_, record) => (
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  label: <p onClick={() => handleDelete(record)}>Delete</p>,
+                  key: "1",
+                },
+                {
+                  label: <p onClick={() => handleCensor(record)}>Censorship</p>,
+                  key: "2",
+                },
+              ],
+            }}
+            trigger={["click"]}
+          >
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>More</Space>
+            </a>
+          </Dropdown>
+        ),
+      },
+    ];
   const columnsListAcc: TableProps<any>["columns"] = [
     {
       title: "Id",
@@ -355,20 +460,26 @@ const Admin = () => {
                 {
                   key: "1",
                   icon: <UserOutlined />,
-                  label: "Danh sách phim",
+                  label: "Danh sách phim đã duyệt",
                   onClick: () => setSelectedMenu("1"),
                 },
                 {
                   key: "2",
-                  icon: <VideoCameraOutlined />,
-                  label: "Danh sách tài khoản",
+                  icon: <UserOutlined />,
+                  label: "Tất cả phim ",
                   onClick: () => setSelectedMenu("2"),
                 },
                 {
                   key: "3",
+                  icon: <VideoCameraOutlined />,
+                  label: "Danh sách tài khoản",
+                  onClick: () => setSelectedMenu("3"),
+                },
+                {
+                  key: "4",
                   icon: <UploadOutlined />,
                   label: "Danh sách Voucher",
-                  onClick: () => setSelectedMenu("3"),
+                  onClick: () => setSelectedMenu("4"),
                 },
               ]}
             />
@@ -412,6 +523,20 @@ const Admin = () => {
                 <div>
                   <Table
                     pagination={false}
+                    dataSource={filmMakerAll.data}
+                    columns={columnsListJobAll}
+                  />
+                  <Pagination
+                    current={current}
+                    onChange={onChangePage}
+                    total={5}
+                  ></Pagination>
+                </div>
+              )}
+              {selectedMenu === "3" && (
+                <div>
+                  <Table
+                    pagination={false}
                     dataSource={acc.data}
                     columns={columnsListAcc}
                   />
@@ -422,7 +547,7 @@ const Admin = () => {
                   ></Pagination>
                 </div>
               )}
-              {selectedMenu === "3" && (
+              {selectedMenu === "4" && (
                 <div>
                   <Button onClick={handleOpenModal}>Add Voucher</Button>
                   <Table
@@ -440,6 +565,14 @@ const Admin = () => {
             </Content>
           </Layout>
         </Layout>
+        <ModalCensorShip
+          setFilmMaker={setFilmMaker}
+          setFilmMakerAll={setFilmMakerAll}
+          // getData={getDataAll()}
+          selectItem={selectedItemCensor}
+          open={modal}
+          handleCancel={handleCloseModalCensor}
+        ></ModalCensorShip>
         <ModalEditMovieAdmin
           setFilmMaker={setFilmMaker}
           // getData={getData()}

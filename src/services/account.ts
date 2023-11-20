@@ -239,10 +239,11 @@ export const logout = (dispatch: any) => {
     setAuthenticate({ isAuthenticated: false, account: {}, loading: false })
   );
 };
-export const getAllFilm = async (accessToken: string) => {
+export const getAllFilm = async (accessToken: string,data:any) => {
   const config = {
-    method: "GET",
+    method: "POST",
     url: `/all-movies`,
+    data:data,
     headers: {
       'Authorization': accessToken
     },

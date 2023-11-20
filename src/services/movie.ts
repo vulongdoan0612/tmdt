@@ -42,4 +42,15 @@ export const getAllFilm = async (accessToken: string) => {
     };
   
     return axios(config);
+};
+export const updateCensorship = async (idMovie: any,censorship:any) => {
+  const values ={idMovie,censorship}
+  console.log(values);
+  const config = {
+    method: "POST",
+    url: `/update-movie-censorship`,
+    data: values,
   };
+
+  return axios(config);
+};
