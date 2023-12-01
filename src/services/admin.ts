@@ -10,10 +10,47 @@ export const loginAdmin = async (data: any) => {
 
   return axios(config);
 };
+export const postComment= async (data: any) => {
+  const config = {
+    method: "POST",
+    url: `/post-comment`,
+    data: data,
+  };
+
+  return axios(config);
+};
+export const postStar = async (data: any) => {
+  const config = {
+    method: "POST",
+    url: `/post-star`,
+    data: data,
+  };
+
+  return axios(config);
+};
+export const getStar = async (data:any) => {
+  const config = {
+    method: "POST",
+    url: `/get-star`,
+    data:data
+  };
+
+  return axios(config);
+};
 export const getAcc = async () => {
   const config = {
     method: "GET",
     url: `/all-acc`,
+  };
+
+  return axios(config);
+};
+export const getComment = async (data: any) => {
+  console.log(data)
+  const config = {
+    method: "POST",
+    url: `/get-comment`,
+    data:data
   };
 
   return axios(config);
