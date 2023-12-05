@@ -3,12 +3,13 @@ import ModalAds from "@/components/ModalAds";
 import { PAGE_TITLE } from "@/constants";
 import Page from "@/layout/Page";
 import { RootState } from "@/redux/store";
-import { getComment, getStar, postComment, postStar } from "@/services/admin";
+import { addFav, getComment, getStar, postComment, postStar } from "@/services/admin";
 import { getFilm } from "@/services/movie";
 import { Button, Form, Image, Input, Modal, Rate } from "antd";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { Player } from "video-react";
 
 const Video = () => {
@@ -113,6 +114,20 @@ const [hasFetched, setHasFetched] = useState(false);
    }
   console.log(value)
   // console.log(value);
+  const handleAddFav = async () => {
+    try {
+
+      const daz = {
+        idMovie: film?.data?._id,
+        userId: account._id
+      };
+     const data= await addFav(daz);
+    toast.success(data.data.message)
+    }
+    catch {
+      // 
+    }
+  }
   return (
     <Page title={PAGE_TITLE.PROFILE} loadingData={false}>
       <div className="video-page">
@@ -130,7 +145,7 @@ const [hasFetched, setHasFetched] = useState(false);
             <Rate tooltips={desc} onChange={(e) => onStar(e)} value={value} />
             {value ? <span>{desc[value - 1]}</span> : ""}
           </div>
-          <Button>Thêm vào danh sách yêu thích</Button>
+          <Button onClick={handleAddFav}>Thêm vào danh sách yêu thích</Button>
         </div>
       </div>
       <div className="comment-wrapper">

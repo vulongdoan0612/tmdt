@@ -28,6 +28,24 @@ export const postStar = async (data: any) => {
 
   return axios(config);
 };
+export const addFav = async (data: any) => {
+  const config = {
+    method: "POST",
+    url: `/add-fav`,
+    data: data,
+  };
+
+  return axios(config);
+};
+export const delFav = async (data: any) => {
+  const config = {
+    method: "DELETE",
+    url: `/remove-fav`,
+    data: data,
+  };
+
+  return axios(config);
+};
 export const getStar = async (data:any) => {
   const config = {
     method: "POST",
