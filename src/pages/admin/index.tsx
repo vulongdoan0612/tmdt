@@ -409,7 +409,7 @@ const Admin = () => {
              ? text.map((item, index) => <li key={index}>{item}</li>)
              : Object.entries(text).map(([key, value]) => (
                  <li key={key}>
-                   {key}: {value}
+                   {key}: {value as string}
                  </li>
                ))}
          </ul>
@@ -431,7 +431,9 @@ const Admin = () => {
                  type: "divider",
                },
                {
-                 label: <p onClick={() => handleDeleteVoucher(record)}>Delete</p>,
+                 label: (
+                   <p onClick={() => handleDeleteVoucher(record)}>Delete</p>
+                 ),
                  key: "1",
                },
              ],

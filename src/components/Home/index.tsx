@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 const Home = () => {
   const [films, setFilms] = useState<any>([]);
@@ -53,9 +54,9 @@ const [open,setOpen]=useState(false)
         className="mySwiper"
       >
         <SwiperSlide>
-          <a href="/truyenhinh">
+          <Link href="/truyenhinh">
             <Image src="/images/truyenhinh.png" alt="" preview={false}></Image>
-          </a>
+          </Link>
         </SwiperSlide>
         <SwiperSlide>
           <Image src="/images/tructiep.png" alt="" preview={false}></Image>
