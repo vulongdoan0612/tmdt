@@ -167,18 +167,19 @@ export const uploadMovie = async (movie: any, thumbnail:any,accessToken: string 
   if (movie.movies) {
     formData.append('movies', movie?.movies[0]?.originFileObj);
   }
-  console.log(thumbnail,movie)
   if (thumbnail.thumbnails) {
     formData.append('thumbnails', thumbnail?.thumbnails[0]?.originFileObj);
   }
   if(info){
+    formData.append('category', info.category);
+
     formData.append('author', info.author);
     formData.append('movieName', info.movieName);
     formData.append('dateRelease', info.dateRelease);
     formData.append('actor', info.actor);
 
   }
-
+  console.log(info,formData)
   const config = {
     method: "POST",
     url: `/upload-video`,
@@ -207,6 +208,8 @@ export const editMovie = async (
     formData.append("thumbnails", thumbnail?.thumbnails[0]?.originFileObj);
   }
   if (info) {
+    formData.append("category", info.category);
+
     formData.append("author", info.author);
     formData.append("movieName", info.movieName);
     formData.append("dateRelease", info.dateRelease);

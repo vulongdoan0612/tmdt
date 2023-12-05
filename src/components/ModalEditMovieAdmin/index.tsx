@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import CustomModal from "../CustomModal";
-import { Button, Form, Input, Upload } from "antd";
+import { Button, Form, Input, Select, Upload } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { setAuthenticate } from "@/redux/reducers/auth";
 import { RootState } from "@/redux/store";
@@ -30,12 +30,15 @@ const ModalEditMovieAdmin = ({
       author: selectedItem?.author,
       movieName: selectedItem?.movieName,
       actor: selectedItem?.actor,
+      category:selectedItem?.category,
+
       dateRelease: selectedItem?.dateRelease,
       thumbnails: selectedItem?.thumbnails,
       movies: selectedItem?.movies,
     });
   }, [
     form,
+    selectedItem?.category,
     selectedItem?.author,
     selectedItem?.movieName,
     selectedItem?.actor,
@@ -57,6 +60,7 @@ const ModalEditMovieAdmin = ({
         const info = {
           author: values.author,
           movieName: values.movieName,
+          category:values?.category,
           actor: values.actor,
           dateRelease: values.dateRelease,
           // Thay đổi thuộc tính "plan"
@@ -84,6 +88,16 @@ const ModalEditMovieAdmin = ({
     console.log(fileList);
     setFileListThumbnail(fileList);
   };
+  const handleChange = (value: any) => {
+    console.log(`selected ${value}`);
+  };
+  const options = [];
+  for (let i = 10; i < 36; i++) {
+    options.push({
+      value: i.toString(36) + i,
+      label: i.toString(36) + i,
+    });
+  }
   return (
     <CustomModal
       title={"Sửa Phimdd"}
@@ -111,6 +125,17 @@ const ModalEditMovieAdmin = ({
           rules={[{ required: true, message: "Tên Phim is required" }]}
         >
           <Input placeholder="Tên Phim" />
+        </Form.Item>
+        <Form.Item name="category" label="Thể loại">
+          <Select
+            mode="tags"
+            style={{
+              width: "100%",
+            }}
+            onChange={handleChange}
+            tokenSeparators={[","]}
+            options={options}
+          />
         </Form.Item>
         <Form.Item
           name="actor"

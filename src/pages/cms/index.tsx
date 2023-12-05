@@ -63,7 +63,6 @@ const CMS = () => {
       
       const data =await getAllFilmMaker(String(token))
       setFilmMaker(data)
-    
   }
   useEffect(()=>{
     getData()

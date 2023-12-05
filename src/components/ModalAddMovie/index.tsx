@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import CustomModal from "../CustomModal";
-import { Button, Form, Input, Upload } from "antd";
+import { Button, Form, Input, Select, Upload } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { setAuthenticate } from "@/redux/reducers/auth";
 import { RootState } from "@/redux/store";
@@ -14,9 +14,10 @@ const ModalAddMovie = ({ open, handleCancel, getData }: any) => {
   const { account } = useSelector((state: RootState) => state.auth);
   const [fileList, setFileList] = useState<any[]>([]);
   const [fileListThumbnail, setFileListThumbnail] = useState<any[]>([]);
-
+  const [type,setType]=useState('')
   const onFinish = async (values: any) => {
     try {
+      console.log(values)
       const token = localStorage.getItem("access_token");
 
       if (fileList.length > 0) {
@@ -25,9 +26,11 @@ const ModalAddMovie = ({ open, handleCancel, getData }: any) => {
           movieName: values.movieName,
           actor: values.actor,
           dateRelease: values.dateRelease,
+          category:values.category[0]
 
           // Thay đổi thuộc tính "plan"
         };
+        console.log(info)
         const response = await uploadMovie(
           { movies: fileList },
           { thumbnails: fileListThumbnail },
@@ -49,6 +52,11 @@ const ModalAddMovie = ({ open, handleCancel, getData }: any) => {
     console.log(fileList);
     setFileListThumbnail(fileList);
   };
+  const handleChange = (value: any) => {
+    setType(value)
+    console.log(`selected ${value}`);
+  };
+
   return (
     <CustomModal
       title={"Tạo phim"}
@@ -77,6 +85,16 @@ const ModalAddMovie = ({ open, handleCancel, getData }: any) => {
         >
           <Input placeholder="Tên Phim" />
         </Form.Item>
+        <Form.Item name="category" label="Thể loại">
+          <Select
+            mode="tags"
+            style={{
+              width: "100%",
+            }}
+            onChange={handleChange}
+          />
+        </Form.Item>
+       
         <Form.Item
           name="actor"
           label="Diễn viên"

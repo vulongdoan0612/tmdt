@@ -88,6 +88,8 @@ export const editMovieAdmin = async (
     formData.append("thumbnails", thumbnail?.thumbnails[0]?.originFileObj);
   }
   if (info) {
+    formData.append("category", info.category);
+
     formData.append("author", info.author);
     formData.append("movieName", info.movieName);
     formData.append("dateRelease", info.dateRelease);

@@ -1,6 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, FreeMode } from "swiper/modules";
-import { Image, Modal } from "antd";
+import { Image, Input, Modal, Select } from "antd";
 import { useEffect, useState } from "react";
 import { getAllFilm } from "@/services/account";
 import { useRouter } from "next/router";
@@ -9,16 +9,17 @@ import "swiper/css/navigation";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import Link from "next/link";
+import { SearchProps } from "antd/es/input";
 
 const Home = () => {
   const [films, setFilms] = useState<any>([]);
   const router = useRouter();
-    const { account } = useSelector((state: RootState) => state.auth);
-const [open,setOpen]=useState(false)
+  const { account } = useSelector((state: RootState) => state.auth);
+  const [open, setOpen] = useState(false);
   const getFilm = async () => {
     const token = localStorage.getItem("access_token");
 
-    const data = await getAllFilm(String(token), { censorship :"true"});
+    const data = await getAllFilm(String(token), { censorship: "true" });
     setFilms(data);
   };
   useEffect(() => {
@@ -28,16 +29,26 @@ const [open,setOpen]=useState(false)
     if (account?.username !== undefined) {
       router.push(`/video/${item}`);
     } else {
-      setOpen(true)
+      setOpen(true);
     }
-    
   };
-   const handleCancel = () => {
-     setOpen(false);
+  const handleCancel = () => {
+    setOpen(false);
   };
   const handleOk = () => {
     setOpen(false);
   };
+  const { Search } = Input;
+  const onSearch: SearchProps['onSearch'] = async (value, _e, info) =>    {const token = localStorage.getItem("access_token");
+  const data=
+  await getAllFilm(String(token),{value});
+  setFilms(data);
+}
+const onSearchName =async(value:any)=>{
+  const token = localStorage.getItem("access_token");
+  const data=
+  await getAllFilm(String(token),{movieName:value});
+  setFilms(data);}
   return (
     <div className="home-wrapper">
       <h1 className="title">Danh mục</h1>
@@ -92,8 +103,21 @@ const [open,setOpen]=useState(false)
           <Image src="/images/v-league.png" alt="" preview={false}></Image>
         </SwiperSlide>
       </Swiper>
-      <h1 className="title">Mới ra mắt</h1>
-      <Swiper
+      <div
+        style={{
+          marginTop:'3rem',
+          marginBottom:'3rem',
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h1 className="title">Mới ra mắt</h1>{" "}
+        <Search placeholder="Nhập thể loại phim" onSearch={onSearch} style={{ width: 200 }} />
+        {/* <Search placeholder="Nhập tên phim" onSearch={onSearchName} style={{ width: 200 }} /> */}
+
+      </div>
+        {films?.data?.length>0 ?  <Swiper
         slidesPerView={3}
         spaceBetween={30}
         navigation={true}
@@ -116,7 +140,8 @@ const [open,setOpen]=useState(false)
             );
           })}
         </div>
-      </Swiper>
+      </Swiper> : <h1 style={{color:'grey'}}>Phim không tìm thấy</h1>}
+     
       <Modal
         open={open}
         onOk={handleOk}
