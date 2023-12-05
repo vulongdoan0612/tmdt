@@ -17,16 +17,25 @@ import { Player } from "video-react";
 import ReactPlayer from "react-player";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { getStar } from "@/services/admin";
 
-const ModalAds = ({ open, handleCancel, time }: any) => {
-  const [value, setValue] = useState(1);
+const ModalAds = ({ setValue,id, open, handleCancel, time }: any) => {
+  const [value, setValueD] = useState(1);
   const [on, setOn] = useState(false);
 
-  const onFinish = (values: any) => {
-    console.log(value);
-    handleCancel();
+  const onFinish = async (values: any) => {
+    try {
+      
+      handleCancel();
+    }
+    catch {
+      // 
+    }
   };
-  const handleClose = () => {
+  const handleClose = async () => {
+    // const data = await getStar({ idMovie: id });
+    // console.log(data, "Dddddddddddddddddddddddddddddddddddd", id);
+    // setValue(data?.data?.averageRating);
     handleCancel();
   };
 
@@ -81,13 +90,12 @@ const ModalAds = ({ open, handleCancel, time }: any) => {
               date={
                 Date.now() +
                 Number(
-                  account?.voucher === 'vip0'
+                  account?.voucher === "vip0"
                     ? 10000
                     : account?.voucher === "vip1"
                     ? 6000
                     : account?.voucher === "vip2"
                     ? 3000
-
                     : 0
                 )
               }

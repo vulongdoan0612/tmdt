@@ -100,17 +100,18 @@ const [hasFetched, setHasFetched] = useState(false);
       };
       await postStar(newData);
     } finally {
-      await getDataStarAvg();
+      // await getDataStarAvg();
     }
   };
   const getDataStarAvg = async () => {
     const data = await getStar({ idMovie: film?.data?._id });
     console.log(data);
-    setValue(data?.data?.star);
+    setValue(data?.data?.averageRating);
   };
-  //  if (value === undefined) {
-  //    return <div>Loading...</div>; // Hiển thị loading hoặc nội dung khác tùy thuộc vào trường hợp của bạn
-  //  }
+   if (value === undefined) {
+     return <div>Loading...</div>; // Hiển thị loading hoặc nội dung khác tùy thuộc vào trường hợp của bạn
+   }
+  console.log(value)
   // console.log(value);
   return (
     <Page title={PAGE_TITLE.PROFILE} loadingData={false}>
@@ -120,13 +121,16 @@ const [hasFetched, setHasFetched] = useState(false);
           poster={film?.data?.thumbnails}
           src={film?.data?.movies}
         />
-        <div className="description">
-          <h1 className="title">{film?.data?.movieName}</h1>
-          <span className="author">Đạo diễn: {film?.data?.author}</span>
-          <span className="date">Ngày sản xuất: {film?.data?.dateRelease}</span>
-          <span className="actor">Diễn viên: {film?.data?.actor}</span>
-          <Rate tooltips={desc} onChange={(e) => onStar(e)} value={value} />
-          {value ? <span>{desc[value - 1]}</span> : ""}
+        <div style={{display:'flex',justifyContent:'space-between'}}>
+          <div className="description">
+            <h1 className="title">{film?.data?.movieName}</h1>
+            <span className="author">Đạo diễn: {film?.data?.author}</span>
+            <span className="date">Ngày sản xuất: {film?.data?.dateRelease}</span>
+            <span className="actor">Diễn viên: {film?.data?.actor}</span>
+            <Rate tooltips={desc} onChange={(e) => onStar(e)} value={value} />
+            {value ? <span>{desc[value - 1]}</span> : ""}
+          </div>
+          <Button>Thêm vào danh sách yêu thích</Button>
         </div>
       </div>
       <div className="comment-wrapper">
@@ -185,6 +189,8 @@ const [hasFetched, setHasFetched] = useState(false);
 
       {account?.voucher !== "vip3" && (
         <ModalAds
+          setValue={setValue}
+          id={film?.data?._id}
           open={open}
           handleCancel={handleCancel}
           time={time}
