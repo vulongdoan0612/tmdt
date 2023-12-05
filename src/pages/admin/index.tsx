@@ -393,7 +393,7 @@ const Admin = () => {
        fixed: "left",
      },
      {
-       title: "Tên Voucher",
+       title: "Tên Gói",
        dataIndex: "voucher",
        key: "voucher",
        fixed: "left",
@@ -480,7 +480,7 @@ const Admin = () => {
                 {
                   key: "4",
                   icon: <UploadOutlined />,
-                  label: "Danh sách Voucher",
+                  label: "Danh sách Gói",
                   onClick: () => setSelectedMenu("4"),
                 },
               ]}
@@ -551,7 +551,7 @@ const Admin = () => {
               )}
               {selectedMenu === "4" && (
                 <div>
-                  <Button onClick={handleOpenModal}>Add Voucher</Button>
+                  <Button onClick={handleOpenModal}>Thêm Gói</Button>
                   <Table
                     pagination={false}
                     dataSource={listVoucher.data}

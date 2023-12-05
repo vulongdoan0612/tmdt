@@ -48,7 +48,7 @@ const ModalEditVoucher = ({ selectedItemVoucher,getListVoucher, open, handleCanc
   };
   return (
     <CustomModal
-      title={"Sửa Voucher"}
+      title={"Sửa Gói"}
       open={open}
       onCancel={handleCancel}
       className="modal-banner"
@@ -62,10 +62,10 @@ const ModalEditVoucher = ({ selectedItemVoucher,getListVoucher, open, handleCanc
       >
         <Form.Item
           name="voucher"
-          label="Tên voucher"
+          label="Tên Gói"
           rules={[{ required: true, message: "Diễn viên is required" }]}
         >
-          <Input placeholder="Tên voucher" />
+          <Input placeholder="Tên Gói" />
         </Form.Item>
         <Form.Item
           name="detail"
