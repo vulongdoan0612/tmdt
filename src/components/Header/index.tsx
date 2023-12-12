@@ -100,6 +100,7 @@ useDidMountEffect(() => {
    const refresh_token = localStorage.getItem("refresh_token");
     
    const role = localStorage.getItem("role");
+   console.log(role,token,"test");
    if (role === "user" && token) {
      try {
        if (token && refresh_token) {
