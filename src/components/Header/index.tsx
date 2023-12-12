@@ -146,8 +146,9 @@ const Header = () => {
    }
   };
   useEffect(() => {
+    console.log('cái con cặcccccccccc')
     fetchData();
-  }, []);
+  }, [token]);
   const onFinish = async (values: LoginForm) => {
       const refresh_token = localStorage.getItem("refresh_token");
     setConfirmLoading(true);
