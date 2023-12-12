@@ -67,7 +67,7 @@ export const requestRegister = async (data: IRegister) => {
     console.log(accessToken)
     const config = {
       method: "GET",
-      url: `profile`,
+      url: `/profile`,
       headers: {
         Authorization: accessToken,
       },

@@ -1,6 +1,7 @@
 import {
   Button,
   Form,
+  Image,
   Input,
   Radio,
   RadioChangeEvent,
@@ -67,7 +68,7 @@ const ModalAds = ({ setValue,id, open, handleCancel, time }: any) => {
     >
       <Form layout="vertical" onFinish={onFinish} autoComplete="off">
         <div>
-          <video
+          {/* <video
             autoPlay={true}
             muted={true}
             loop={true}
@@ -76,12 +77,13 @@ const ModalAds = ({ setValue,id, open, handleCancel, time }: any) => {
             height={400}
           >
             <source
-              src="https://pic.pikbest.com/17/95/89/04X888piCvmB.mp4"
+              src="ads.mp4"
               type="video/mp4"
               width={600}
               height={600}
             />
-          </video>
+          </video> */}
+          <Image src='/images/ads.png' preview={false} alt=""></Image>
         </div>
         <Button className={`${on ? "enable" : "disable"}`}>
           {/* <Countdown value={Date.now() + 15 * 1000}/>{" "} */}
