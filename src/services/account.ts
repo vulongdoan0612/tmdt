@@ -64,7 +64,7 @@ export const requestRegister = async (data: IRegister) => {
     accessToken: string,
     refresh_token: string
   ) => {
-    console.log(accessToken)
+    console.log(accessToken,"test")
     const config = {
       method: "GET",
       url: `/profile`,

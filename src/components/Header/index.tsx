@@ -20,9 +20,7 @@ const Header = () => {
    const token = localStorage.getItem("access_token");
   const router = useRouter();
 
-useEffect(() => {
-  fetchData();
-}, []);
+
     const { account, isAuthenticated, loading } = useSelector(
       (state: RootState) => state.auth
     );
@@ -73,6 +71,7 @@ useEffect(() => {
     setOpen(false)
     setOpenForgotpassword(true)
   }
+  
   const handleCancel = () => {
     console.log("Clicked cancel button");
     setOpen(false);
@@ -101,7 +100,7 @@ useEffect(() => {
     
    const role = localStorage.getItem("role");
    console.log(role,token,"test");
-   if (role === "user" && token) {
+   if (role === "user") {
      try {
        if (token && refresh_token) {
          dispatch(setAuthenticate({ loading: true }));
@@ -123,7 +122,7 @@ useEffect(() => {
        console.log("error");
      }
    }
-   else if(role==="filmMaker" && token){
+   else if(role==="filmMaker" ){
     try {
       if (token && refresh_token) {
         dispatch(setAuthenticate({ loading: true }));
@@ -145,7 +144,10 @@ useEffect(() => {
       console.log("error");
     }
    }
- };
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   const onFinish = async (values: LoginForm) => {
       const refresh_token = localStorage.getItem("refresh_token");
     setConfirmLoading(true);
