@@ -20,9 +20,9 @@ const Header = () => {
    const token = localStorage.getItem("access_token");
   const router = useRouter();
 
-useDidMountEffect(() => {
+useEffect(() => {
   fetchData();
-}, [token]);
+}, []);
     const { account, isAuthenticated, loading } = useSelector(
       (state: RootState) => state.auth
     );
