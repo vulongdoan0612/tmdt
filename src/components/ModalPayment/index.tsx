@@ -25,7 +25,7 @@ const ModalPayment = ({ vip,open, handleCancel }: any) => {
     }
   return (
     <CustomModal
-      title={"Sửa Phim"}
+      title={vip}
       open={open}
       onCancel={handleCancel}
       className="modal-banner"

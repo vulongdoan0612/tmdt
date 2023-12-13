@@ -30,6 +30,7 @@ const Voucher = () => {
     <Page title={PAGE_TITLE.PROFILE} loadingData={false}>
       <div className="voucher">
         {dataVoucher?.data?.map((item:any,key:any) => {
+          console.log(item)
           return (
             <div className="wrapper-voucher" key={key}>
               <div className="voucher-box ">
@@ -42,7 +43,7 @@ const Voucher = () => {
                   {/* {console.log(item.detail)} */}
                 </div>
               </div>
-              <Button onClick={() => handleOpenModal("vip1")}>Mua Gói</Button>
+              <Button onClick={() => handleOpenModal(item?.voucher)}>Mua Gói</Button>
             </div>
           );
         })}

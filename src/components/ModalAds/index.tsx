@@ -92,11 +92,11 @@ const ModalAds = ({ setValue,id, open, handleCancel, time }: any) => {
               date={
                 Date.now() +
                 Number(
-                  account?.voucher === "vip0"
+                  account?.voucher === "Gói 1 tháng"
                     ? 10000
-                    : account?.voucher === "vip1"
+                    : account?.voucher === "Gói 3 tháng"
                     ? 6000
-                    : account?.voucher === "vip2"
+                    : account?.voucher === "Gói 6 tháng"
                     ? 3000
                     : 0
                 )
